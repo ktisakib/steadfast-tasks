@@ -17,7 +17,7 @@ export function SellerCard({ seller }: SellerCardProps) {
         username: 'bdfashion',
         email: 'info@bdfashion.com',
         phone: '+8801234567890',
-        logo: '/images/apple.png',
+        logo: '/images/pg.png',
         verified: true,
         rising_star: true,
         shop_url: '/shop/bdfashion',
@@ -45,14 +45,11 @@ export function SellerCard({ seller }: SellerCardProps) {
                         {/* Seller Logo */}
                         <div className="w-10 h-10 relative">
                             <Image
-                                src={sellerData.logo || '/images/apple.png'}
+                                src={sellerData.logo || '/images/pg.png'}
                                 alt={sellerData.shop_name}
                                 fill
                                 className="object-cover rounded"
-                                onError={(e) => {
-                                    const target = e.target as HTMLImageElement;
-                                    target.src = '/images/pg.png';
-                                }}
+
                             />
                         </div>
 

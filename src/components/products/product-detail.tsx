@@ -144,13 +144,13 @@ export function ProductDetail({ product }: ProductDetailProps) {
     };
 
     return (
-        <div className="bg-white flex flex-col items-center justify-center px-8 py-6">
+        <div className="bg-white flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
             <div className="max-w-[1280px] w-full">
-                <div className="flex flex-row gap-10 items-start">
+                <div className="flex flex-col lg:flex-row gap-6 lg:gap-10 items-start">
                     {/* Image Gallery */}
-                    <div className="w-[380px] flex flex-col gap-4">
+                    <div className="w-full lg:w-[380px] flex flex-col gap-4">
                         {/* Main Image */}
-                        <div className="aspect-square bg-gray-100 rounded-[5px] overflow-hidden">
+                        <div className="aspect-square bg-gray-100 rounded-[5px] overflow-hidden max-w-md mx-auto lg:mx-0 lg:max-w-none">
                             <AnimatePresence mode="wait">
                                 <motion.div
                                     key={selectedImage}
@@ -173,13 +173,13 @@ export function ProductDetail({ product }: ProductDetailProps) {
 
                         {/* Thumbnail Images */}
                         {allImages.length > 1 && (
-                            <div className="flex gap-2">
+                            <div className="flex gap-2 justify-center lg:justify-start overflow-x-auto pb-2">
                                 {allImages.slice(0, 5).map((image, index) => (
                                     <button
                                         key={index}
                                         onClick={() => setSelectedImage(index)}
                                         className={cn(
-                                            'w-[68px] h-[68px] rounded-[5px] overflow-hidden bg-gray-100',
+                                            'w-[68px] h-[68px] flex-shrink-0 rounded-[5px] overflow-hidden bg-gray-100',
                                             selectedImage === index ? 'ring-2 ring-[#00B795]' : ''
                                         )}
                                     >
@@ -197,28 +197,28 @@ export function ProductDetail({ product }: ProductDetailProps) {
                     </div>
 
                     {/* Product Information */}
-                    <div className="w-[507px] flex flex-col gap-[26px]">
+                    <div className="w-full lg:w-[507px] flex flex-col gap-6 lg:gap-[26px]">
                         {/* Header Section */}
-                        <div className="flex flex-col gap-[11px]">
+                        <div className="flex flex-col gap-3 lg:gap-[11px]">
                             {/* Title and Actions */}
                             <div className="flex flex-col gap-2">
-                                <div className="flex justify-between items-center">
-                                    <h1 className="text-[20px] font-medium text-slate-900 leading-[28px] font-['Onest']">
+                                <div className="flex justify-between items-start lg:items-center">
+                                    <h1 className="text-lg sm:text-xl lg:text-[20px] font-medium text-slate-900 leading-6 sm:leading-7 lg:leading-[28px] font-['Onest'] pr-2">
                                         {product.name}
                                     </h1>
-                                    <div className="flex gap-2">
-                                        <button className="w-12 h-12 rounded-full border border-gray-200 flex items-center justify-center hover:bg-gray-50">
-                                            <FavoriteIcon className="w-6 h-6 text-slate-500" width={24} height={24} />
+                                    <div className="flex gap-2 flex-shrink-0">
+                                        <button className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border border-gray-200 flex items-center justify-center hover:bg-gray-50">
+                                            <FavoriteIcon className="w-5 h-5 sm:w-6 sm:h-6 text-slate-500" width={20} height={20} />
                                         </button>
-                                        <button className="w-12 h-12 rounded-full border border-gray-200 flex items-center justify-center hover:bg-gray-50">
-                                            <ShareIcon className="w-6 h-6 text-slate-500" width={24} height={24} />
+                                        <button className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border border-gray-200 flex items-center justify-center hover:bg-gray-50">
+                                            <ShareIcon className="w-5 h-5 sm:w-6 sm:h-6 text-slate-500" width={20} height={20} />
                                         </button>
                                     </div>
                                 </div>
 
                                 {/* Rating */}
-                                <div className="flex items-center gap-2.5">
-                                    <span className="text-[16px] text-slate-600 font-['Onest']">
+                                <div className="flex items-center gap-2.5 flex-wrap">
+                                    <span className="text-sm sm:text-base lg:text-[16px] text-slate-600 font-['Onest']">
                                         {product.rating_avg.toFixed(1)}
                                     </span>
                                     <div className="flex gap-1">
@@ -226,7 +226,7 @@ export function ProductDetail({ product }: ProductDetailProps) {
                                             <Star
                                                 key={i}
                                                 className={cn(
-                                                    'w-5 h-5',
+                                                    'w-4 h-4 sm:w-5 sm:h-5',
                                                     i < Math.floor(product.rating_avg)
                                                         ? 'fill-[#EAB308] text-[#EAB308]'
                                                         : 'text-gray-300'
@@ -234,33 +234,33 @@ export function ProductDetail({ product }: ProductDetailProps) {
                                             />
                                         ))}
                                     </div>
-                                    <span className="text-[16px] text-slate-600 font-['Onest']">
+                                    <span className="text-sm sm:text-base lg:text-[16px] text-slate-600 font-['Onest']">
                                         {product.rating_count.toLocaleString()}
                                     </span>
-                                    <ChevronDown className="w-6 h-6 text-black" />
+                                    <ChevronDown className="w-5 h-5 sm:w-6 sm:h-6 text-black" />
                                 </div>
                             </div>
 
                             {/* Price */}
-                            <div className="flex items-center gap-4">
-                                <span className="text-[24px] font-semibold text-[#00a788] font-['Onest'] leading-[32px]">
+                            <div className="flex items-center gap-3 sm:gap-4">
+                                <span className="text-xl sm:text-2xl lg:text-[24px] font-semibold text-[#00a788] font-['Onest'] leading-7 sm:leading-8 lg:leading-[32px]">
                                     ৳{parseFloat(currentPrice).toLocaleString()}
                                 </span>
                                 {hasDiscount && (
-                                    <span className="text-[16px] text-slate-400 line-through font-['Onest'] leading-[24px]">
+                                    <span className="text-sm sm:text-base lg:text-[16px] text-slate-400 line-through font-['Onest'] leading-5 sm:leading-6 lg:leading-[24px]">
                                         ৳{parseFloat(regularPrice).toLocaleString()}
                                     </span>
                                 )}
                             </div>
 
                             {/* Promotion Badge */}
-                            <div className="flex items-center">
-                                <span className="text-[14px] font-medium text-slate-600 font-['Onest'] mr-[73px]">
+                            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-0">
+                                <span className="text-sm lg:text-[14px] font-medium text-slate-600 font-['Onest'] sm:mr-[73px]">
                                     Promotion
                                 </span>
                                 <div className="relative">
-                                    <div className="bg-gradient-to-r from-[#FF8810] to-[#D23707] text-white px-3 py-1 rounded-sm flex items-center gap-1">
-                                        <span className="text-[14px] font-bold font-['Onest']">
+                                    <div className="bg-gradient-to-r from-[#FF8810] to-[#D23707] text-white px-3 py-1 rounded-sm flex items-center gap-1 w-fit">
+                                        <span className="text-sm lg:text-[14px] font-bold font-['Onest']">
                                             Min. spend ৳550
                                         </span>
                                         <ChevronDown className="w-3.5 h-3.5" />
@@ -282,7 +282,7 @@ export function ProductDetail({ product }: ProductDetailProps) {
 
                                 return (
                                     <div key={attributeName} className="flex flex-col gap-2">
-                                        <div className="text-[16px] font-medium text-slate-600 font-['Onest']">
+                                        <div className="text-sm sm:text-base lg:text-[16px] font-medium text-slate-600 font-['Onest']">
                                             {attributeName === 'Color' ? 'Available Color:' : `Select ${attributeName}:`}{' '}
                                             <span className="text-neutral-900">
                                                 {currentValue || variations[0]?.variation_attributes.find(
@@ -291,7 +291,7 @@ export function ProductDetail({ product }: ProductDetailProps) {
                                             </span>
                                         </div>
 
-                                        <div className="flex gap-2">
+                                        <div className="flex gap-2 flex-wrap">
                                             {variations.map((variation) => {
                                                 const attr = variation.variation_attributes.find(
                                                     va => va.attribute.name === attributeName
@@ -308,7 +308,7 @@ export function ProductDetail({ product }: ProductDetailProps) {
                                                             onClick={() => !isOutOfStock && handleVariationChange(attributeName, value)}
                                                             disabled={isOutOfStock}
                                                             className={cn(
-                                                                'w-14 h-14 rounded border-2 overflow-hidden',
+                                                                'w-12 h-12 sm:w-14 sm:h-14 rounded border-2 overflow-hidden flex-shrink-0',
                                                                 isSelected
                                                                     ? 'border-[#00b795] bg-[#e6f8f4]'
                                                                     : isOutOfStock
@@ -322,7 +322,7 @@ export function ProductDetail({ product }: ProductDetailProps) {
                                                                     alt={value}
                                                                     width={56}
                                                                     height={56}
-                                                                    className="object-cover"
+                                                                    className="object-cover w-full h-full"
                                                                 />
                                                             ) : (
                                                                 <div className="w-full h-full bg-gray-200" />
@@ -337,8 +337,8 @@ export function ProductDetail({ product }: ProductDetailProps) {
                                                             onClick={() => !isOutOfStock && handleVariationChange(attributeName, value)}
                                                             disabled={isOutOfStock}
                                                             className={cn(
-                                                                'min-w-10 h-10 px-2 rounded border flex items-center justify-center',
-                                                                'text-[16px] font-medium font-["Onest"]',
+                                                                'min-w-8 sm:min-w-10 h-8 sm:h-10 px-2 rounded border flex items-center justify-center flex-shrink-0',
+                                                                'text-sm sm:text-base lg:text-[16px] font-medium font-["Onest"]',
                                                                 isSelected
                                                                     ? 'border-[#00b795] text-slate-700'
                                                                     : isOutOfStock
@@ -357,8 +357,8 @@ export function ProductDetail({ product }: ProductDetailProps) {
                             })}
 
                             {/* Quantity */}
-                            <div className="flex flex-col gap-2 w-[195px]">
-                                <span className="text-[16px] font-medium text-neutral-900 font-['Poppins']">
+                            <div className="flex flex-col gap-2 w-full sm:w-[195px]">
+                                <span className="text-sm sm:text-base lg:text-[16px] font-medium text-neutral-900 font-['Poppins']">
                                     Quantity
                                 </span>
                                 <div className="relative h-10">
@@ -366,19 +366,19 @@ export function ProductDetail({ product }: ProductDetailProps) {
                                         <button
                                             onClick={() => handleQuantityChange(quantity - 1)}
                                             disabled={quantity <= 1 || currentStock === 0}
-                                            className="w-[33px] h-[33px] bg-slate-100 rounded-full flex items-center justify-center disabled:opacity-50"
+                                            className="w-7 h-7 sm:w-[33px] sm:h-[33px] bg-slate-100 rounded-full flex items-center justify-center disabled:opacity-50"
                                         >
-                                            <span className="text-[24px] font-medium text-slate-500 font-['Onest']">-</span>
+                                            <span className="text-lg sm:text-[24px] font-medium text-slate-500 font-['Onest']">-</span>
                                         </button>
-                                        <span className="text-[16px] font-medium text-[#252b42] font-['Onest'] min-w-[20px] text-center">
+                                        <span className="text-sm sm:text-base lg:text-[16px] font-medium text-[#252b42] font-['Onest'] min-w-[20px] text-center">
                                             {quantity.toString().padStart(2, '0')}
                                         </span>
                                         <button
                                             onClick={() => handleQuantityChange(quantity + 1)}
                                             disabled={quantity >= currentStock || currentStock === 0}
-                                            className="w-[33px] h-[33px] bg-slate-100 rounded-full flex items-center justify-center disabled:opacity-50"
+                                            className="w-7 h-7 sm:w-[33px] sm:h-[33px] bg-slate-100 rounded-full flex items-center justify-center disabled:opacity-50"
                                         >
-                                            <span className="text-[24px] font-medium text-slate-500 font-['Onest']">+</span>
+                                            <span className="text-lg sm:text-[24px] font-medium text-slate-500 font-['Onest']">+</span>
                                         </button>
                                     </div>
                                 </div>
@@ -386,11 +386,11 @@ export function ProductDetail({ product }: ProductDetailProps) {
                         </div>
 
                         {/* Add to Cart Button */}
-                        <div className="w-[412px]">
+                        <div className="w-full sm:w-[412px]">
                             <Button
                                 onClick={handleAddToCart}
                                 disabled={currentStock === 0 || isAddingToCart}
-                                className="w-full h-12 bg-[#00a788] hover:bg-[#00a788]/90 text-white rounded font-medium text-[16px] font-['Onest']"
+                                className="w-full h-12 bg-[#00a788] hover:bg-[#00a788]/90 text-white rounded font-medium text-sm sm:text-base lg:text-[16px] font-['Onest']"
                             >
                                 {isAddingToCart ? (
                                     <div className="flex items-center gap-2">
@@ -405,21 +405,21 @@ export function ProductDetail({ product }: ProductDetailProps) {
                     </div>
 
                     {/* Delivery Options */}
-                    <div className="w-[313px] h-[481px] flex flex-col gap-4">
+                    <div className="w-full lg:w-[313px] lg:h-[481px] flex flex-col gap-4 order-first lg:order-last">
                         {/* Delivery Options Card */}
                         <div className="bg-white border border-slate-200 rounded-xl p-4">
-                            <h3 className="text-[18px] font-medium text-slate-600 font-['Onest'] mb-3">
+                            <h3 className="text-base sm:text-lg lg:text-[18px] font-medium text-slate-600 font-['Onest'] mb-3">
                                 Delivery Options
                             </h3>
                             <div className="flex flex-col gap-4">
                                 {/* Regular Delivery */}
                                 <div className="flex gap-2">
-                                    <Package className="w-6 h-6 text-[#00B795]" />
+                                    <Package className="w-5 h-5 sm:w-6 sm:h-6 text-[#00B795] flex-shrink-0" />
                                     <div>
-                                        <div className="text-[16px] font-medium text-slate-700 font-['Onest']">
+                                        <div className="text-sm sm:text-base lg:text-[16px] font-medium text-slate-700 font-['Onest']">
                                             Regular
                                         </div>
-                                        <div className="text-[12px] text-slate-600 font-['Onest']">
+                                        <div className="text-xs sm:text-sm lg:text-[12px] text-slate-600 font-['Onest']">
                                             Delivery within 2-3 days
                                         </div>
                                     </div>
@@ -427,17 +427,17 @@ export function ProductDetail({ product }: ProductDetailProps) {
 
                                 {/* Express Delivery */}
                                 <div className="flex gap-2">
-                                    <Package className="w-6 h-6 text-slate-300" />
+                                    <Package className="w-5 h-5 sm:w-6 sm:h-6 text-slate-300 flex-shrink-0" />
                                     <div>
                                         <div className="flex items-center gap-3">
-                                            <span className="text-[16px] font-medium text-slate-300 font-['Onest']">
+                                            <span className="text-sm sm:text-base lg:text-[16px] font-medium text-slate-300 font-['Onest']">
                                                 Express
                                             </span>
-                                            <span className="text-[10px] font-semibold text-red-400 font-['Onest']">
+                                            <span className="text-xs lg:text-[10px] font-semibold text-red-400 font-['Onest']">
                                                 Not Available
                                             </span>
                                         </div>
-                                        <div className="text-[12px] text-slate-300 font-['Onest']">
+                                        <div className="text-xs sm:text-sm lg:text-[12px] text-slate-300 font-['Onest']">
                                             Delivery within 24 Hours.
                                         </div>
                                     </div>
