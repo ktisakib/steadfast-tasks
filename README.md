@@ -138,7 +138,7 @@ Dynamic variant handling with real-time updates:
 // Supports multiple variant types
 variants: {
   color: "Red",
-  size: "Large", 
+  size: "Large",
   storage: "128GB",
   ram: "8GB"
 }

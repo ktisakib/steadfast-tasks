@@ -418,11 +418,10 @@ export default function CartPage() {
                                 <button
                                     onClick={handleProceedToCheckout}
                                     disabled={!agreedToTerms}
-                                    className={`h-[47.381px] rounded w-[370px] flex items-center justify-center transition-colors cursor-pointer ${
-                                        agreedToTerms 
-                                            ? 'bg-teal-500 hover:bg-teal-600' 
+                                    className={`h-[47.381px] rounded w-[370px] flex items-center justify-center transition-colors cursor-pointer ${agreedToTerms
+                                            ? 'bg-teal-500 hover:bg-teal-600'
                                             : 'bg-slate-300 cursor-not-allowed'
-                                    }`}
+                                        }`}
                                 >
                                     <span className="font-onest font-medium text-[16px] leading-[24px] text-white">
                                         Proceed to Checkout
@@ -435,11 +434,10 @@ export default function CartPage() {
                         <div className="flex items-start gap-[7px]">
                             <button
                                 onClick={() => setAgreedToTerms(!agreedToTerms)}
-                                className={`mt-[5px] rounded-[3.5px] w-[18px] h-[18px] flex items-center justify-center border-2 transition-colors ${
-                                    agreedToTerms 
-                                        ? 'bg-teal-500 border-teal-500' 
+                                className={`mt-[5px] rounded-[3.5px] w-[18px] h-[18px] flex items-center justify-center border-2 transition-colors ${agreedToTerms
+                                        ? 'bg-teal-500 border-teal-500'
                                         : 'bg-white border-slate-300 hover:border-slate-400'
-                                }`}
+                                    }`}
                             >
                                 {agreedToTerms && (
                                     <svg className="w-2.5 h-2.5" fill="none" viewBox="0 0 10 10">
