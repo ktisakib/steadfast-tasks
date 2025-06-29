@@ -164,7 +164,7 @@ export function ProductDetail({ product }: ProductDetailProps) {
                                     animate={{ opacity: 1 }}
                                     exit={{ opacity: 0 }}
                                     transition={{ duration: 0.3 }}
-                                    className="relative w-full h-full min-h-[300px] sm:min-h-[400px]"
+                                    className="relative w-full  z-10 h-full min-h-[300px] sm:min-h-[400px]"
                                 >
                                     {allImages.length > 0 ? (
                                         <Image
@@ -173,7 +173,7 @@ export function ProductDetail({ product }: ProductDetailProps) {
                                             fill
                                             className="object-cover"
                                             priority
-                                          
+
                                         />
                                     ) : (
                                         <div className="w-full h-full bg-gray-200 flex items-center justify-center">
@@ -186,13 +186,13 @@ export function ProductDetail({ product }: ProductDetailProps) {
 
                         {/* Thumbnail Images */}
                         {allImages.length > 1 && (
-                            <div className="flex gap-2 justify-center lg:justify-start overflow-x-auto pb-2">
+                            <div className="flex gap-2 justify-center relative z-20 p-2 lg:justify-start overflow-x-auto pb-2">
                                 {allImages.slice(0, 5).map((image, index) => (
                                     <button
                                         key={index}
                                         onClick={() => setSelectedImage(index)}
                                         className={cn(
-                                            'w-[68px] h-[68px] flex-shrink-0 rounded-[5px] overflow-hidden bg-gray-100',
+                                            'w-[68px] h-[68px] overflow-hidden flex-shrink-0 rounded-[5px] bg-gray-100',
                                             selectedImage === index ? 'ring-2 ring-[#00B795]' : ''
                                         )}
                                     >
@@ -460,6 +460,131 @@ export function ProductDetail({ product }: ProductDetailProps) {
 
                         <SellerCard seller={product.seller} />
                     </div>
+                </div>
+
+                {/* Description and Specification Sections */}
+                <div className="mt-8 space-y-6">
+                    {/* Description Section */}
+                    <DescriptionSection description={product.description} />
+
+                    {/* Specification Section */}
+                    <SpecificationSection product={product} />
+                </div>
+            </div>
+        </div>
+    );
+}
+
+// Description Section Component
+function DescriptionSection({ description }: { description: string }) {
+    const [isExpanded, setIsExpanded] = useState(false);
+
+    return (
+        <div className="bg-white rounded-lg border border-gray-100 p-6">
+            <div className="relative">
+                <h3 className="text-[24px] font-medium text-[#252b42] font-['Onest'] leading-[32px] mb-6">
+                    Description
+                </h3>
+
+                <div className={cn(
+                    "relative",
+                    !isExpanded && "max-h-[200px] overflow-hidden"
+                )}>
+                    <div className="text-[16px] text-slate-600 font-['Onest'] leading-[28px] space-y-4">
+                        {description ? (
+                            <div dangerouslySetInnerHTML={{ __html: description }} />
+                        ) : (
+                            <>
+                                <p>
+                                    Just as a book is judged by its cover, the first thing you notice when you pick up a modern smartphone is the display.
+                                    Nothing surprising, because advanced technologies allow you to practically level the display frames and cutouts for the front
+                                    camera and speaker, leaving no room for bold design solutions. And how good that in such realities Apple everything is fine with displays.
+                                </p>
+                                <p>
+                                    Advanced technologies allow you to practically level the display frames and cutouts for the front camera and speaker,
+                                    leaving no room for bold design solutions. And how good that in such realities Apple everything.
+                                </p>
+                            </>
+                        )}
+                    </div>
+
+                    {!isExpanded && (
+                        <div className="absolute bottom-0 left-0 right-0 h-[80px] bg-gradient-to-t from-white to-transparent" />
+                    )}
+                </div>
+
+                <div className="flex justify-center mt-6">
+                    <button
+                        onClick={() => setIsExpanded(!isExpanded)}
+                        className="flex items-center gap-2 px-4 py-2 text-[16px] font-medium text-slate-900 font-['Onest'] hover:bg-gray-50 rounded"
+                    >
+                        <span>{isExpanded ? 'See Less' : 'See More'}</span>
+                        <ChevronDown className={cn(
+                            "w-6 h-6 transition-transform",
+                            isExpanded && "rotate-180"
+                        )} />
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+// Specification Section Component
+function SpecificationSection({ product }: { product: ProductDetailType }) {
+    const [isExpanded, setIsExpanded] = useState(false);
+
+    // Sample specifications - in a real app, these would come from the product data
+    const specifications = [
+        "GMP Cosmetic Good Manufacturing Practice",
+        "Cruelty Free",
+        "No Animal Testing",
+        "Zenpia Global Standard",
+        "Comply with Global Standard"
+    ];
+
+    return (
+        <div className="bg-white rounded-lg border border-gray-100 p-6">
+            <div className="relative">
+                <h3 className="text-[24px] font-medium text-[#252b42] font-['Onest'] leading-[32px] mb-6">
+                    Specification
+                </h3>
+
+                <div className={cn(
+                    "relative",
+                    !isExpanded && "max-h-[200px] overflow-hidden"
+                )}>
+                    <div className="space-y-4">
+                        <h4 className="text-[20px] font-medium text-[#252b42] font-['Onest'] leading-[28px]">
+                            {product.name}
+                        </h4>
+
+                        <ul className="space-y-2 text-[16px] text-slate-600 font-['Onest'] leading-[28px]">
+                            {specifications.map((spec, index) => (
+                                <li key={index} className="flex items-start gap-2">
+                                    <div className="w-1.5 h-1.5 bg-slate-600 rounded-full mt-3 flex-shrink-0" />
+                                    <span>{spec}</span>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+
+                    {!isExpanded && (
+                        <div className="absolute bottom-0 left-0 right-0 h-[60px] bg-gradient-to-t from-white to-transparent" />
+                    )}
+                </div>
+
+                <div className="flex justify-center mt-6">
+                    <button
+                        onClick={() => setIsExpanded(!isExpanded)}
+                        className="flex items-center gap-2 px-4 py-2 text-[16px] font-medium text-slate-900 font-['Onest'] hover:bg-gray-50 rounded"
+                    >
+                        <span>{isExpanded ? 'See Less' : 'See More'}</span>
+                        <ChevronDown className={cn(
+                            "w-6 h-6 transition-transform",
+                            isExpanded && "rotate-180"
+                        )} />
+                    </button>
                 </div>
             </div>
         </div>
