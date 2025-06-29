@@ -188,17 +188,7 @@ export function ProductDetail({ product }: ProductDetailProps) {
                                             fill
                                             className="object-cover"
                                             priority
-                                            onError={(e) => {
-                                                console.error('Failed to load image:', allImages[selectedImage]);
-                                                // Try to show next image or fallback
-                                                const nextImageIndex = selectedImage + 1;
-                                                if (nextImageIndex < allImages.length) {
-                                                    setSelectedImage(nextImageIndex);
-                                                } else {
-                                                    // Show placeholder
-                                                    e.currentTarget.src = '/images/placeholder-product.svg';
-                                                }
-                                            }}
+
                                         />
                                     ) : (
                                         <div className="w-full h-full bg-gray-200 flex items-center justify-center">
@@ -227,10 +217,7 @@ export function ProductDetail({ product }: ProductDetailProps) {
                                             width={68}
                                             height={68}
                                             className="object-cover"
-                                            onError={(e) => {
-                                                console.error('Failed to load thumbnail:', image);
-                                                e.currentTarget.src = '/images/placeholder-product.svg';
-                                            }}
+                                           
                                         />
                                     </button>
                                 ))}
