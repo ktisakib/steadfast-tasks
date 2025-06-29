@@ -43,7 +43,7 @@ export default function NavBar() {
         <nav className="relative font-sans">
             {/* Top Header - Dark Section - Matches Figma exactly */}
             <div className="bg-slate-900 py-4">
-                <div className="max-w-[1280px] mx-auto px-20 flex items-center justify-between">
+                <div className="max-w-[1280px] mx-auto  flex items-center justify-between">
                     {/* Logo */}
                     <div className="flex items-center gap-1 flex-shrink-0">
                         <Link href="/" className="flex items-center gap-1">
@@ -135,7 +135,7 @@ export default function NavBar() {
 
             {/* Bottom Navigation - Light Section - Matches Figma */}
             <div className="bg-white">
-                <div className="max-w-[1280px] mx-auto px-20 flex items-center justify-between py-3">
+                <div className="max-w-[1280px] mx-auto flex items-center justify-between py-3">
                     {/* Categories */}
                     <div className="flex items-center gap-6">
                         <div className="flex items-center gap-2 border-r border-slate-200 min-w-[158px] pr-6 cursor-pointer">

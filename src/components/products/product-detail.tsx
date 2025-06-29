@@ -1,24 +1,18 @@
 'use client';
 
-import { useState, useTransition, useOptimistic } from 'react';
+import { useState, useTransition, useEffect, useMemo } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'motion/react';
-import { Star, Heart, Share2, Minus, Plus, Truck, Shield, RotateCcw, ShoppingCart } from 'lucide-react';
+import { Star, Heart, Share2, Minus, Plus, ShoppingCart, Package, ChevronDown } from 'lucide-react';
 import { ProductDetail as ProductDetailType, ProductVariation } from '@/lib/types';
-import { formatPrice, cn } from '@/lib/utils';
+import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { useCartStore } from '@/lib/store';
 import { toast } from 'sonner';
+import { useQueryStates, parseAsString } from 'nuqs';
 
 interface ProductDetailProps {
     product: ProductDetailType;
-}
-
-interface OptimisticState {
-    selectedVariation: ProductVariation | null;
-    selectedImage: number;
-    quantity: number;
-    isAddingToCart: boolean;
 }
 
 export function ProductDetail({ product }: ProductDetailProps) {
@@ -29,55 +23,100 @@ export function ProductDetail({ product }: ProductDetailProps) {
     const productImages = Object.values(product.image || {}).map(img => img.url);
     const allImages = [product.thumbnail, ...productImages].filter(Boolean);
 
-    const [optimisticState, setOptimisticState] = useOptimistic<OptimisticState>({
-        selectedVariation: product.variations?.[0] || null,
-        selectedImage: 0,
-        quantity: 1,
-        isAddingToCart: false,
-    });
+    const [selectedImage, setSelectedImage] = useState(0);
+    const [quantity, setQuantity] = useState(1);
+    const [isAddingToCart, setIsAddingToCart] = useState(false);
 
-    // Group variations by attribute type
-    const variationsByAttribute = product.variations.reduce((acc, variation) => {
-        variation.variation_attributes.forEach(attr => {
-            const attributeName = attr.attribute.name;
-            if (!acc[attributeName]) {
-                acc[attributeName] = [];
-            }
-            if (!acc[attributeName].some(v => v.id === variation.id)) {
-                acc[attributeName].push(variation);
-            }
-        });
-        return acc;
-    }, {} as Record<string, ProductVariation[]>);
-
-    const currentPrice = optimisticState.selectedVariation?.discount_price || product.product_detail.discount_price;
-    const regularPrice = optimisticState.selectedVariation?.regular_price || product.product_detail.regular_price;
-    const hasDiscount = parseFloat(regularPrice) > parseFloat(currentPrice);
-    const currentStock = optimisticState.selectedVariation?.total_stock_qty || product.total_stock_qty;
-
-    const handleVariationChange = (variation: ProductVariation) => {
-        startTransition(() => {
-            setOptimisticState({
-                ...optimisticState,
-                selectedVariation: variation,
-                quantity: Math.min(optimisticState.quantity, variation.total_stock_qty)
+    // Get all unique attribute names from variations
+    const attributeNames = useMemo(() => {
+        const names = new Set<string>();
+        product.variations.forEach(variation => {
+            variation.variation_attributes.forEach(attr => {
+                names.add(attr.attribute.name);
             });
         });
+        return Array.from(names);
+    }, [product.variations]);
+
+    // Create query state parsers for each attribute
+    const queryStateParsers = useMemo(() => {
+        const parsers: Record<string, typeof parseAsString> = {};
+        attributeNames.forEach(name => {
+            parsers[name.toLowerCase()] = parseAsString;
+        });
+        return parsers;
+    }, [attributeNames]);
+
+    // Use nuqs to manage variation state in URL
+    const [variationState, setVariationState] = useQueryStates(queryStateParsers);
+
+    // Find the selected variation based on URL state
+    const selectedVariation = useMemo(() => {
+        if (Object.values(variationState).every(v => v === null)) {
+            // No selection in URL, return first variation
+            return product.variations?.[0] || null;
+        }
+
+        // Find variation that matches URL state
+        const matchingVariation = product.variations.find(variation => {
+            return attributeNames.every(attrName => {
+                const urlValue = variationState[attrName.toLowerCase()];
+                if (!urlValue) return true; // If no value in URL, it matches any
+                
+                const variationAttr = variation.variation_attributes.find(
+                    attr => attr.attribute.name === attrName
+                );
+                return variationAttr?.attribute_option.attribute_value === urlValue;
+            });
+        });
+
+        return matchingVariation || product.variations?.[0] || null;
+    }, [variationState, product.variations, attributeNames]);
+
+    // Group variations by attribute for UI
+    const variationsByAttribute = useMemo(() => {
+        return product.variations.reduce((acc, variation) => {
+            variation.variation_attributes.forEach(attr => {
+                const attributeName = attr.attribute.name;
+                if (!acc[attributeName]) {
+                    acc[attributeName] = [];
+                }
+                // Only add if this specific attribute value isn't already in the list
+                const existingValue = acc[attributeName].find(v => 
+                    v.variation_attributes.some(va => 
+                        va.attribute.name === attributeName && 
+                        va.attribute_option.attribute_value === attr.attribute_option.attribute_value
+                    )
+                );
+                if (!existingValue) {
+                    acc[attributeName].push(variation);
+                }
+            });
+            return acc;
+        }, {} as Record<string, ProductVariation[]>);
+    }, [product.variations]);
+
+    const currentPrice = selectedVariation?.discount_price || product.product_detail.discount_price;
+    const regularPrice = selectedVariation?.regular_price || product.product_detail.regular_price;
+    const hasDiscount = parseFloat(regularPrice) > parseFloat(currentPrice);
+    const currentStock = selectedVariation?.total_stock_qty || product.total_stock_qty;
+
+    const handleVariationChange = (attributeName: string, value: string) => {
+        setVariationState(prev => ({
+            ...prev,
+            [attributeName.toLowerCase()]: value
+        }));
     };
 
     const handleQuantityChange = (newQuantity: number) => {
         if (newQuantity >= 1 && newQuantity <= currentStock) {
-            startTransition(() => {
-                setOptimisticState({ ...optimisticState, quantity: newQuantity });
-            });
+            setQuantity(newQuantity);
         }
     };
-
     const handleAddToCart = () => {
         startTransition(() => {
-            setOptimisticState({ ...optimisticState, isAddingToCart: true });
+            setIsAddingToCart(true);
 
-            const selectedVariation = optimisticState.selectedVariation;
             const variationAttributes = selectedVariation?.variation_attributes.reduce((acc, attr) => {
                 acc[attr.attribute.name] = attr.attribute_option.attribute_value;
                 return acc;
@@ -96,274 +135,376 @@ export function ProductDetail({ product }: ProductDetailProps) {
             toast.success('Product added to cart!');
 
             setTimeout(() => {
-                setOptimisticState({ ...optimisticState, isAddingToCart: false });
+                setIsAddingToCart(false);
             }, 500);
         });
     };
 
     return (
-        <div className="bg-white rounded-lg overflow-hidden">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-                {/* Image Gallery */}
-                <div className="space-y-4">
-                    {/* Main Image */}
-                    <div className="relative aspect-square bg-gray-100 rounded-lg overflow-hidden">
-                        <AnimatePresence mode="wait">
-                            <motion.div
-                                key={optimisticState.selectedImage}
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                exit={{ opacity: 0 }}
-                                transition={{ duration: 0.3 }}
-                                className="relative w-full h-full"
-                            >
-                                <Image
-                                    src={allImages[optimisticState.selectedImage] || '/placeholder.jpg'}
-                                    alt={product.name}
-                                    fill
-                                    className="object-cover"
-                                    priority
-                                />
-                            </motion.div>
-                        </AnimatePresence>
-                    </div>
-
-                    {/* Thumbnail Images */}
-                    {allImages.length > 1 && (
-                        <div className="flex gap-2 overflow-x-auto">
-                            {allImages.map((image, index) => (
-                                <button
-                                    key={index}
-                                    onClick={() => setOptimisticState({ ...optimisticState, selectedImage: index })}
-                                    className={cn(
-                                        'relative w-20 h-20 rounded-lg overflow-hidden border-2 transition-colors flex-shrink-0',
-                                        optimisticState.selectedImage === index ? 'border-blue-500' : 'border-gray-200'
-                                    )}
+        <div className="bg-white flex flex-col items-center justify-center px-20 py-6">
+            <div className="max-w-[1280px] w-full">
+                <div className="flex flex-row gap-10 items-start">
+                    {/* Image Gallery */}
+                    <div className="w-[380px] flex flex-col gap-4">
+                        {/* Main Image */}
+                        <div className="aspect-square bg-gray-100 rounded-[5px] overflow-hidden">
+                            <AnimatePresence mode="wait">
+                                <motion.div
+                                    key={selectedImage}
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    exit={{ opacity: 0 }}
+                                    transition={{ duration: 0.3 }}
+                                    className="relative w-full h-full"
                                 >
                                     <Image
-                                        src={image}
-                                        alt={`${product.name} ${index + 1}`}
+                                        src={allImages[selectedImage] || '/placeholder.jpg'}
+                                        alt={product.name}
                                         fill
                                         className="object-cover"
+                                        priority
                                     />
-                                </button>
-                            ))}
+                                </motion.div>
+                            </AnimatePresence>
                         </div>
-                    )}
-                </div>
 
-                {/* Product Information */}
-                <div className="space-y-6 p-6">
-                    {/* Header */}
-                    <div>
-                        <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 leading-tight">
-                            {product.name}
-                        </h1>
-
-                        {/* Brand */}
-                        {product.brand && (
-                            <p className="text-sm text-gray-600 mt-1">
-                                by <span className="font-medium">{product.brand.name}</span>
-                            </p>
-                        )}
-
-                        {/* SKU */}
-                        <p className="text-sm text-gray-500 mt-1">
-                            SKU: {optimisticState.selectedVariation?.sku || product.sku}
-                        </p>
-
-                        {/* Rating */}
-                        {product.rating_avg > 0 && (
-                            <div className="flex items-center gap-2 mt-2">
-                                <div className="flex items-center">
-                                    {[...Array(5)].map((_, i) => (
-                                        <Star
-                                            key={i}
-                                            className={cn(
-                                                'w-4 h-4',
-                                                i < Math.floor(product.rating_avg)
-                                                    ? 'fill-yellow-400 text-yellow-400'
-                                                    : 'text-gray-300'
-                                            )}
+                        {/* Thumbnail Images */}
+                        {allImages.length > 1 && (
+                            <div className="flex gap-2">
+                                {allImages.slice(0, 5).map((image, index) => (
+                                    <button
+                                        key={index}
+                                        onClick={() => setSelectedImage(index)}
+                                        className={cn(
+                                            'w-[68px] h-[68px] rounded-[5px] overflow-hidden bg-gray-100',
+                                            selectedImage === index ? 'ring-2 ring-[#00B795]' : ''
+                                        )}
+                                    >
+                                        <Image
+                                            src={image}
+                                            alt={`${product.name} ${index + 1}`}
+                                            width={68}
+                                            height={68}
+                                            className="object-cover"
                                         />
-                                    ))}
-                                </div>
-                                <span className="text-sm text-gray-600">
-                                    {product.rating_avg.toFixed(1)} ({product.rating_count} reviews)
-                                </span>
+                                    </button>
+                                ))}
                             </div>
                         )}
                     </div>
 
-                    {/* Price */}
-                    <div className="space-y-2">
-                        <div className="flex items-center gap-3">
-                            <span className="text-3xl font-bold text-gray-900">
-                                ৳{parseFloat(currentPrice).toLocaleString()}
-                            </span>
-                            {hasDiscount && (
-                                <>
-                                    <span className="text-xl text-gray-500 line-through">
-                                        ৳{parseFloat(regularPrice).toLocaleString()}
-                                    </span>
-                                    <span className="px-2 py-1 bg-red-100 text-red-600 text-sm font-semibold rounded">
-                                        {Math.round(((parseFloat(regularPrice) - parseFloat(currentPrice)) / parseFloat(regularPrice)) * 100)}% OFF
-                                    </span>
-                                </>
-                            )}
-                        </div>
-                    </div>
-
-                    {/* Stock Status */}
-                    <div className="flex items-center gap-2">
-                        <div className={cn(
-                            'w-3 h-3 rounded-full',
-                            currentStock > 0 ? 'bg-green-500' : 'bg-red-500'
-                        )} />
-                        <span className={cn(
-                            'text-sm font-medium',
-                            currentStock > 0 ? 'text-green-700' : 'text-red-700'
-                        )}>
-                            {currentStock > 0 ? `In Stock (${currentStock} available)` : 'Out of Stock'}
-                        </span>
-                    </div>
-
-                    {/* Variations */}
-                    {Object.keys(variationsByAttribute).length > 0 && (
-                        <div className="space-y-4">
-                            {Object.entries(variationsByAttribute).map(([attributeName, variations]) => (
-                                <div key={attributeName}>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                                        {attributeName}
-                                    </label>
-                                    <div className="flex flex-wrap gap-2">
-                                        {variations.map((variation) => {
-                                            const attributeValue = variation.variation_attributes.find(
-                                                attr => attr.attribute.name === attributeName
-                                            )?.attribute_option.attribute_value;
-
-                                            const isSelected = optimisticState.selectedVariation?.id === variation.id;
-
-                                            return (
-                                                <button
-                                                    key={variation.id}
-                                                    onClick={() => handleVariationChange(variation)}
-                                                    className={cn(
-                                                        'px-4 py-2 border rounded-lg text-sm font-medium transition-colors',
-                                                        isSelected
-                                                            ? 'border-blue-500 bg-blue-50 text-blue-700'
-                                                            : 'border-gray-200 hover:border-gray-300'
-                                                    )}
-                                                >
-                                                    {attributeValue}
-                                                </button>
-                                            );
-                                        })}
+                    {/* Product Information */}
+                    <div className="w-[507px] flex flex-col gap-[26px]">
+                        {/* Header Section */}
+                        <div className="flex flex-col gap-[11px]">
+                            {/* Title and Actions */}
+                            <div className="flex flex-col gap-2">
+                                <div className="flex justify-between items-center">
+                                    <h1 className="text-[20px] font-medium text-slate-900 leading-[28px] font-['Onest']">
+                                        {product.name}
+                                    </h1>
+                                    <div className="flex gap-2">
+                                        <button className="w-12 h-12 rounded-full border border-gray-200 flex items-center justify-center hover:bg-gray-50">
+                                            <Heart className="w-6 h-6 text-slate-500" />
+                                        </button>
+                                        <button className="w-12 h-12 rounded-full border border-gray-200 flex items-center justify-center hover:bg-gray-50">
+                                            <Share2 className="w-6 h-6 text-slate-500" />
+                                        </button>
                                     </div>
                                 </div>
-                            ))}
-                        </div>
-                    )}
 
-                    {/* Quantity */}
-                    <div className="space-y-2">
-                        <label className="block text-sm font-medium text-gray-700">
-                            Quantity
-                        </label>
-                        <div className="flex items-center gap-3">
-                            <div className="flex items-center border border-gray-200 rounded-lg">
-                                <button
-                                    onClick={() => handleQuantityChange(optimisticState.quantity - 1)}
-                                    disabled={optimisticState.quantity <= 1 || currentStock === 0}
-                                    className="p-2 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                                >
-                                    <Minus className="w-4 h-4" />
-                                </button>
-                                <span className="px-4 py-2 min-w-[60px] text-center">
-                                    {optimisticState.quantity}
+                                {/* Rating */}
+                                <div className="flex items-center gap-2.5">
+                                    <span className="text-[16px] text-slate-600 font-['Onest']">
+                                        {product.rating_avg.toFixed(1)}
+                                    </span>
+                                    <div className="flex gap-1">
+                                        {[...Array(5)].map((_, i) => (
+                                            <Star
+                                                key={i}
+                                                className={cn(
+                                                    'w-5 h-5',
+                                                    i < Math.floor(product.rating_avg)
+                                                        ? 'fill-[#EAB308] text-[#EAB308]'
+                                                        : 'text-gray-300'
+                                                )}
+                                            />
+                                        ))}
+                                    </div>
+                                    <span className="text-[16px] text-slate-600 font-['Onest']">
+                                        {product.rating_count.toLocaleString()}
+                                    </span>
+                                    <ChevronDown className="w-6 h-6 text-black" />
+                                </div>
+                            </div>
+
+                            {/* Price */}
+                            <div className="flex items-center gap-4">
+                                <span className="text-[24px] font-semibold text-[#00a788] font-['Onest'] leading-[32px]">
+                                    ৳{parseFloat(currentPrice).toLocaleString()}
                                 </span>
-                                <button
-                                    onClick={() => handleQuantityChange(optimisticState.quantity + 1)}
-                                    disabled={optimisticState.quantity >= currentStock || currentStock === 0}
-                                    className="p-2 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                                >
-                                    <Plus className="w-4 h-4" />
-                                </button>
+                                {hasDiscount && (
+                                    <span className="text-[16px] text-slate-400 line-through font-['Onest'] leading-[24px]">
+                                        ৳{parseFloat(regularPrice).toLocaleString()}
+                                    </span>
+                                )}
+                            </div>
+
+                            {/* Promotion Badge */}
+                            <div className="flex items-center">
+                                <span className="text-[14px] font-medium text-slate-600 font-['Onest'] mr-[73px]">
+                                    Promotion
+                                </span>
+                                <div className="relative">
+                                    <div className="bg-gradient-to-r from-[#FF8810] to-[#D23707] text-white px-3 py-1 rounded-sm flex items-center gap-1">
+                                        <span className="text-[14px] font-bold font-['Onest']">
+                                            Min. spend ৳550
+                                        </span>
+                                        <ChevronDown className="w-3.5 h-3.5" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Variations Section */}
+                        <div className="flex flex-col gap-4">
+                            {/* Dynamic Variation Selection */}
+                            {attributeNames.map(attributeName => {
+                                const variations = variationsByAttribute[attributeName];
+                                if (!variations) return null;
+
+                                const currentValue = selectedVariation?.variation_attributes.find(
+                                    attr => attr.attribute.name === attributeName
+                                )?.attribute_option.attribute_value;
+
+                                return (
+                                    <div key={attributeName} className="flex flex-col gap-2">
+                                        <div className="text-[16px] font-medium text-slate-600 font-['Onest']">
+                                            {attributeName === 'Color' ? 'Available Color:' : `Select ${attributeName}:`}{' '}
+                                            <span className="text-neutral-900">
+                                                {currentValue || variations[0]?.variation_attributes.find(
+                                                    attr => attr.attribute.name === attributeName
+                                                )?.attribute_option.attribute_value}
+                                            </span>
+                                        </div>
+                                        
+                                        <div className="flex gap-2">
+                                            {variations.map((variation) => {
+                                                const attr = variation.variation_attributes.find(
+                                                    va => va.attribute.name === attributeName
+                                                );
+                                                const value = attr?.attribute_option.attribute_value || '';
+                                                const isSelected = currentValue === value;
+                                                const isOutOfStock = variation.total_stock_qty === 0;
+
+                                                if (attributeName === 'Color') {
+                                                    // Color swatches
+                                                    return (
+                                                        <button
+                                                            key={`${variation.id}-${value}`}
+                                                            onClick={() => !isOutOfStock && handleVariationChange(attributeName, value)}
+                                                            disabled={isOutOfStock}
+                                                            className={cn(
+                                                                'w-14 h-14 rounded border-2 overflow-hidden',
+                                                                isSelected
+                                                                    ? 'border-[#00b795] bg-[#e6f8f4]'
+                                                                    : isOutOfStock
+                                                                        ? 'border-slate-200 bg-slate-100 opacity-50'
+                                                                        : 'border-slate-200 bg-slate-100 hover:border-slate-300'
+                                                            )}
+                                                        >
+                                                            {variation.image ? (
+                                                                <Image
+                                                                    src={variation.image}
+                                                                    alt={value}
+                                                                    width={56}
+                                                                    height={56}
+                                                                    className="object-cover"
+                                                                />
+                                                            ) : (
+                                                                <div className="w-full h-full bg-gray-200" />
+                                                            )}
+                                                        </button>
+                                                    );
+                                                } else {
+                                                    // Text-based attributes (Size, etc.)
+                                                    return (
+                                                        <button
+                                                            key={`${variation.id}-${value}`}
+                                                            onClick={() => !isOutOfStock && handleVariationChange(attributeName, value)}
+                                                            disabled={isOutOfStock}
+                                                            className={cn(
+                                                                'min-w-10 h-10 px-2 rounded border flex items-center justify-center',
+                                                                'text-[16px] font-medium font-["Onest"]',
+                                                                isSelected
+                                                                    ? 'border-[#00b795] text-slate-700'
+                                                                    : isOutOfStock
+                                                                        ? 'border-slate-200 text-slate-300'
+                                                                        : 'border-slate-200 text-slate-700 hover:border-slate-300'
+                                                            )}
+                                                        >
+                                                            {value}
+                                                        </button>
+                                                    );
+                                                }
+                                            })}
+                                        </div>
+                                    </div>
+                                );
+                            })}
+
+                            {/* Quantity */}
+                            <div className="flex flex-col gap-2 w-[195px]">
+                                <span className="text-[16px] font-medium text-neutral-900 font-['Poppins']">
+                                    Quantity
+                                </span>
+                                <div className="relative h-10">
+                                    <div className="w-full h-full border border-[#E2E8F0] rounded-full flex items-center justify-between px-3">
+                                        <button
+                                            onClick={() => handleQuantityChange(quantity - 1)}
+                                            disabled={quantity <= 1 || currentStock === 0}
+                                            className="w-[33px] h-[33px] bg-slate-100 rounded-full flex items-center justify-center disabled:opacity-50"
+                                        >
+                                            <span className="text-[24px] font-medium text-slate-500 font-['Onest']">-</span>
+                                        </button>
+                                        <span className="text-[16px] font-medium text-[#252b42] font-['Onest'] min-w-[20px] text-center">
+                                            {quantity.toString().padStart(2, '0')}
+                                        </span>
+                                        <button
+                                            onClick={() => handleQuantityChange(quantity + 1)}
+                                            disabled={quantity >= currentStock || currentStock === 0}
+                                            className="w-[33px] h-[33px] bg-slate-100 rounded-full flex items-center justify-center disabled:opacity-50"
+                                        >
+                                            <span className="text-[24px] font-medium text-slate-500 font-['Onest']">+</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Add to Cart Button */}
+                        <div className="w-[412px]">
+                            <Button
+                                onClick={handleAddToCart}
+                                disabled={currentStock === 0 || isAddingToCart}
+                                className="w-full h-12 bg-[#00a788] hover:bg-[#00a788]/90 text-white rounded font-medium text-[16px] font-['Onest']"
+                            >
+                                {isAddingToCart ? (
+                                    <div className="flex items-center gap-2">
+                                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                        Adding to Cart...
+                                    </div>
+                                ) : (
+                                    'Add to Cart'
+                                )}
+                            </Button>
+                        </div>
+                    </div>
+
+                    {/* Delivery Options */}
+                    <div className="w-[313px] h-[481px] flex flex-col gap-4">
+                        {/* Delivery Options Card */}
+                        <div className="bg-white border border-slate-200 rounded-xl p-4">
+                            <h3 className="text-[18px] font-medium text-slate-600 font-['Onest'] mb-3">
+                                Delivery Options
+                            </h3>
+                            <div className="flex flex-col gap-4">
+                                {/* Regular Delivery */}
+                                <div className="flex gap-2">
+                                    <Package className="w-6 h-6 text-[#00B795]" />
+                                    <div>
+                                        <div className="text-[16px] font-medium text-slate-700 font-['Onest']">
+                                            Regular
+                                        </div>
+                                        <div className="text-[12px] text-slate-600 font-['Onest']">
+                                            Delivery within 2-3 days
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Express Delivery */}
+                                <div className="flex gap-2">
+                                    <Package className="w-6 h-6 text-slate-300" />
+                                    <div>
+                                        <div className="flex items-center gap-3">
+                                            <span className="text-[16px] font-medium text-slate-300 font-['Onest']">
+                                                Express
+                                            </span>
+                                            <span className="text-[10px] font-semibold text-red-400 font-['Onest']">
+                                                Not Available
+                                            </span>
+                                        </div>
+                                        <div className="text-[12px] text-slate-300 font-['Onest']">
+                                            Delivery within 24 Hours.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Seller Info Card */}
+                        <div className="bg-white border border-slate-200 rounded-xl p-[15px]">
+                            <div className="border-b border-slate-200 pb-3 mb-4">
+                                <div className="text-[12px] text-slate-600 font-['Onest'] mb-2">
+                                    Sold by
+                                </div>
+                                <div className="flex items-center gap-[9px] mb-4">
+                                    <div className="w-10 h-10 bg-gray-200 rounded-full" />
+                                    <div className="flex-1">
+                                        <div className="flex items-center justify-between">
+                                            <span className="text-[14px] text-slate-600 font-['Onest']">
+                                                BD FASHION HOUSE
+                                            </span>
+                                            <div className="w-5 h-5 text-[#3b82f6]">
+                                                ✓
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center gap-1 mt-2">
+                                            <div className="bg-gradient-to-r from-[#FE7D0D] to-[#FFE5AB] text-white px-2 py-1 rounded text-[10px] font-['Onest']">
+                                                Rising Star
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="flex gap-3">
+                                    <button className="flex-1 bg-[#e6f8f4] text-[#00a788] py-2 px-4 rounded text-[14px] font-medium font-['Onest'] flex items-center justify-center gap-2">
+                                        💬 Chat Now
+                                    </button>
+                                    <button className="flex-1 bg-slate-100 text-slate-600 py-2 px-4 rounded text-[14px] font-medium font-['Onest']">
+                                        View Shop
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* Stats */}
+                            <div className="flex justify-between">
+                                <div>
+                                    <div className="text-[12px] font-medium text-slate-600 font-['Onest']">
+                                        Ship on Time
+                                    </div>
+                                    <div className="text-[28px] text-slate-500 font-['Onest']">
+                                        100%
+                                    </div>
+                                </div>
+                                <div>
+                                    <div className="text-[12px] font-medium text-slate-600 font-['Onest']">
+                                        Chat Response
+                                    </div>
+                                    <div className="text-[28px] text-slate-500 font-['Onest']">
+                                        90%
+                                    </div>
+                                </div>
+                                <div>
+                                    <div className="text-[12px] font-medium text-slate-600 font-['Onest']">
+                                        Shop Rating
+                                    </div>
+                                    <div className="text-[28px] text-slate-500 font-['Onest']">
+                                        99.8%
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-
-                    {/* Add to Cart */}
-                    <div className="space-y-3">
-                        <Button
-                            onClick={handleAddToCart}
-                            disabled={currentStock === 0 || optimisticState.isAddingToCart}
-                            className="w-full h-12 text-base font-semibold"
-                            size="lg"
-                        >
-                            {optimisticState.isAddingToCart ? (
-                                <div className="flex items-center gap-2">
-                                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                                    Adding to Cart...
-                                </div>
-                            ) : (
-                                <div className="flex items-center gap-2">
-                                    <ShoppingCart className="w-5 h-5" />
-                                    Add to Cart
-                                </div>
-                            )}
-                        </Button>
-
-                        <div className="flex gap-2">
-                            <Button variant="outline" size="sm" className="flex-1">
-                                <Heart className="w-4 h-4 mr-2" />
-                                Save
-                            </Button>
-                            <Button variant="outline" size="sm" className="flex-1">
-                                <Share2 className="w-4 h-4 mr-2" />
-                                Share
-                            </Button>
-                        </div>
-                    </div>
-
-                    {/* Features */}
-                    <div className="space-y-3 pt-6 border-t border-gray-200">
-                        <div className="flex items-center gap-3 text-sm text-gray-600">
-                            <Truck className="w-5 h-5" />
-                            <span>Free delivery on orders over ৳500</span>
-                        </div>
-                        <div className="flex items-center gap-3 text-sm text-gray-600">
-                            <RotateCcw className="w-5 h-5" />
-                            <span>7-day return policy</span>
-                        </div>
-                        <div className="flex items-center gap-3 text-sm text-gray-600">
-                            <Shield className="w-5 h-5" />
-                            <span>Warranty included</span>
-                        </div>
-                    </div>
-
-                    {/* Description */}
-                    {product.description && (
-                        <div className="pt-6 border-t border-gray-200">
-                            <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                                Description
-                            </h3>
-                            <div
-                                className="text-gray-600 prose prose-sm max-w-none"
-                                dangerouslySetInnerHTML={{ __html: product.description }}
-                            />
-                        </div>
-                    )}
-
-                    {/* Merchant Info */}
-                    {product.merchant && (
-                        <div className="pt-6 border-t border-gray-200">
-                            <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                                Sold by
-                            </h3>
-                            <p className="text-gray-600">{product.merchant.shop_name}</p>
-                        </div>
-                    )}
                 </div>
             </div>
         </div>
