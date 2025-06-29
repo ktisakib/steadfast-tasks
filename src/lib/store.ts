@@ -7,7 +7,6 @@ export const useCartStore = create<CartState>()(
   persist(
     (set, get) => ({
       items: [],
-      isOpen: false,
 
       addItem: (newItem, quantity = 1) => {
         const { items } = get();
@@ -93,9 +92,6 @@ export const useCartStore = create<CartState>()(
         set({ items: [] });
         showToast.cart.cleared();
       },
-
-      openCart: () => set({ isOpen: true }),
-      closeCart: () => set({ isOpen: false }),
 
       getTotal: () => {
         const { items } = get();

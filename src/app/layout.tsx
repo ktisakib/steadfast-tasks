@@ -18,19 +18,16 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
     children,
-    modal,
 }: Readonly<{
     children: React.ReactNode;
-    modal?: React.ReactNode;
 }>) {
     return (
         <html lang="en">
             <body className={`${onest.variable} antialiased`}>
                 <NuqsAdapter>
-                        <NavBar />
-                        {children}
-                        {modal}
-                        <Footer />
+                    <NavBar />
+                    {children}
+                    <Footer />
                     <Toaster position="top-center" richColors />
                 </NuqsAdapter>
             </body>

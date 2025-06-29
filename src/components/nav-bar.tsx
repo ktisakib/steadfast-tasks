@@ -23,7 +23,7 @@ export default function NavBar() {
     const [isMounted, setIsMounted] = useState(false);
     const router = useRouter();
 
-    const { openCart, getItemCount } = useCartStore();
+    const { getItemCount } = useCartStore();
 
     useEffect(() => {
         setIsMounted(true);
@@ -38,7 +38,6 @@ export default function NavBar() {
     ];
 
     const handleCartClick = () => {
-        openCart();
         router.push('/cart');
     };
 

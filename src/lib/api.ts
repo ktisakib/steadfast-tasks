@@ -1,12 +1,12 @@
 import { Product, ProductDetail, Category, ApiResponse, ProductsResponse, CategoryApiResponse, ProductDetailApiResponse } from './types';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_ENDPOINT || '157.230.240.97:9999/api/v1';
+const API_BASE = process.env.NEXT_PUBLIC_API_ENDPOINT ;
 
 // Generic fetch wrapper with error handling
 async function fetchApi<T>(endpoint: string): Promise<T> {
   try {
     const url = `http://${API_BASE}${endpoint}`;
-   
+
     const response = await fetch(url, {
       next: { revalidate: 60 }, // Cache for 60 seconds
     });

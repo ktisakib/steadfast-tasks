@@ -220,6 +220,7 @@ export interface CartItem {
   slug: string;
   name: string;
   price: number;
+  originalPrice?: number;
   image: string;
   quantity: number;
   variants: {
@@ -231,13 +232,10 @@ export interface CartItem {
 
 export interface CartState {
   items: CartItem[];
-  isOpen: boolean;
   addItem: (item: Omit<CartItem, 'quantity'>, quantity?: number) => void;
   removeItem: (productId: string, variants: CartItem['variants']) => void;
   updateQuantity: (productId: string, variants: CartItem['variants'], quantity: number) => void;
   clearCart: () => void;
-  openCart: () => void;
-  closeCart: () => void;
   getTotal: () => number;
   getItemCount: () => number;
 }
