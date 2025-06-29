@@ -1,8 +1,9 @@
 'use client';
 
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { useQueryStates, parseAsInteger } from 'nuqs';
+import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
+import { useCallback } from 'react';
 
 interface PaginationProps {
     currentPage: number;
@@ -12,17 +13,19 @@ interface PaginationProps {
 }
 
 export function Pagination({ currentPage, lastPage, total, hasNextPage }: PaginationProps) {
-    const [, setFilters] = useQueryStates({
-        page: parseAsInteger.withDefault(1),
-    });
+    const router = useRouter();
+    const pathname = usePathname();
+    const searchParams = useSearchParams();
 
-    const handlePageChange = (page: number) => {
+    const handlePageChange = useCallback((page: number) => {
         if (page >= 1 && page <= lastPage) {
-            setFilters({ page });
+            const params = new URLSearchParams(searchParams.toString());
+            params.set('page', page.toString());
+            router.push(`${pathname}?${params.toString()}`);
             // Scroll to top of page
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
-    };
+    }, [lastPage, searchParams, pathname, router]);
 
     // Generate page numbers to show
     const getPageNumbers = () => {
