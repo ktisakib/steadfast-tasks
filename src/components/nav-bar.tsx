@@ -135,7 +135,7 @@ export default function NavBar() {
 
             {/* Bottom Navigation - Light Section - Matches Figma */}
             <div className="bg-white px-2 xl:flex">
-                <div className="max-w-7xl  w-full mx-auto flex items-center justify-between py-3">
+                <div className="max-w-7xl  w-full mx-auto flex items-center justify-between md:py-3">
                     {/* Categories */}
                     <div className="lg:flex hidden items-center gap-6">
                         <div className="flex items-center gap-2 border-r border-slate-200 min-w-[158px] pr-6 cursor-pointer">

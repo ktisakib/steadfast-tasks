@@ -22,9 +22,15 @@ export function ProductDetail({ product }: ProductDetailProps) {
     const [isPending, startTransition] = useTransition();
     const { addItem } = useCartStore();
 
-    // Get product images from the image object
-    const productImages = Object.values(product.image || {}).map(img => img.url);
+    // Get product images from the image object with better error handling
+    const productImages = product.image ? Object.values(product.image).map(img => img.url).filter(Boolean) : [];
     const allImages = [product.thumbnail, ...productImages].filter(Boolean);
+
+    // Debug: Log the images to see what we're working with
+    console.log('Product:', product.name);
+    console.log('Thumbnail:', product.thumbnail);
+    console.log('Product images:', productImages);
+    console.log('All images:', allImages);
 
     const [selectedImage, setSelectedImage] = useState(0);
     const [quantity, setQuantity] = useState(1);
@@ -148,9 +154,9 @@ export function ProductDetail({ product }: ProductDetailProps) {
             <div className="max-w-[1280px] w-full">
                 <div className="flex flex-col lg:flex-row gap-6 lg:gap-10 items-start">
                     {/* Image Gallery */}
-                    <div className="w-full lg:w-[380px] flex flex-col gap-4">
+                    <div className="w-full lg:w-[380px] flex flex-col gap-4 order-1 lg:order-1">
                         {/* Main Image */}
-                        <div className="aspect-square bg-gray-100 rounded-[5px] overflow-hidden max-w-md mx-auto lg:mx-0 lg:max-w-none">
+                        <div className="aspect-square bg-gray-100 rounded-[5px] overflow-hidden w-full h-auto mx-auto lg:mx-0">
                             <AnimatePresence mode="wait">
                                 <motion.div
                                     key={selectedImage}
@@ -158,15 +164,22 @@ export function ProductDetail({ product }: ProductDetailProps) {
                                     animate={{ opacity: 1 }}
                                     exit={{ opacity: 0 }}
                                     transition={{ duration: 0.3 }}
-                                    className="relative w-full h-full"
+                                    className="relative w-full h-full min-h-[300px] sm:min-h-[400px]"
                                 >
-                                    <Image
-                                        src={allImages[selectedImage] || '/placeholder.jpg'}
-                                        alt={product.name}
-                                        fill
-                                        className="object-cover"
-                                        priority
-                                    />
+                                    {allImages.length > 0 ? (
+                                        <Image
+                                            src={allImages[selectedImage]}
+                                            alt={product.name}
+                                            fill
+                                            className="object-cover"
+                                            priority
+                                          
+                                        />
+                                    ) : (
+                                        <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                                            <span className="text-gray-500 text-center">No image available</span>
+                                        </div>
+                                    )}
                                 </motion.div>
                             </AnimatePresence>
                         </div>
@@ -197,7 +210,7 @@ export function ProductDetail({ product }: ProductDetailProps) {
                     </div>
 
                     {/* Product Information */}
-                    <div className="w-full lg:w-[507px] flex flex-col gap-6 lg:gap-[26px]">
+                    <div className="w-full lg:w-[507px] flex flex-col gap-6 lg:gap-[26px] order-2 lg:order-2">
                         {/* Header Section */}
                         <div className="flex flex-col gap-3 lg:gap-[11px]">
                             {/* Title and Actions */}
@@ -405,7 +418,7 @@ export function ProductDetail({ product }: ProductDetailProps) {
                     </div>
 
                     {/* Delivery Options */}
-                    <div className="w-full lg:w-[313px] lg:h-[481px] flex flex-col gap-4 order-first lg:order-last">
+                    <div className="w-full lg:w-[313px] lg:h-[481px] flex flex-col gap-4 order-3 lg:order-3">
                         {/* Delivery Options Card */}
                         <div className="bg-white border border-slate-200 rounded-xl p-4">
                             <h3 className="text-base sm:text-lg lg:text-[18px] font-medium text-slate-600 font-['Onest'] mb-3">
