@@ -46,6 +46,25 @@ export interface Category {
 }
 
 // Product Detail types
+export interface Seller {
+  id: number;
+  shop_name: string;
+  username: string;
+  email: string;
+  phone: string;
+  logo: string;
+  verified: boolean;
+  rising_star: boolean;
+  shop_url: string;
+  total_products: number;
+  total_reviews: number;
+  rating: number;
+  shipping_time: string;
+  response_time: string;
+  chat_response_rate: number;
+  ship_on_time_rate: number;
+}
+
 export interface ProductDetail {
   id: number;
   name: string;
@@ -76,6 +95,7 @@ export interface ProductDetail {
     id: number;
     shop_name: string;
   };
+  seller: Seller;
   brand: Brand;
   shop_product: ShopProduct;
 }
@@ -236,36 +256,6 @@ export interface ApiResponse<T> {
   to?: number;
 }
 
-export interface PaginationMeta {
-  total: number;
-  last_page: number;
-  current_page: number;
-  next_page_url: string | null;
-  prev_page_url: string | null;
-  per_page: number;
-  from: number;
-  to: number;
-}
-
-export interface ProductApiResponse {
-  message: string;
-  data: Product[];
-  total: number;
-  last_page: number;
-  current_page: number;
-  next_page_url: string | null;
-}
-
-export interface CategoryApiResponse {
-  message: string;
-  data: Category[];
-}
-
-export interface ProductDetailApiResponse {
-  message: string;
-  data: ProductDetail;
-}
-
 export interface ProductsResponse {
   data: Product[];
   total: number;
@@ -276,6 +266,16 @@ export interface ProductsResponse {
   per_page?: number;
   from?: number;
   to?: number;
+}
+
+export interface CategoryApiResponse {
+  message: string;
+  data: Category[];
+}
+
+export interface ProductDetailApiResponse {
+  message: string;
+  data: ProductDetail;
 }
 
 // Note: SearchParams are now handled using Next.js 15 async params pattern

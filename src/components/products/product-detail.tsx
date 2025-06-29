@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button';
 import { useCartStore } from '@/lib/store';
 import { toast } from 'sonner';
 import { useQueryStates, parseAsString } from 'nuqs';
+import { SellerCard } from './seller-card';
 
 interface ProductDetailProps {
     product: ProductDetailType;
@@ -444,68 +445,7 @@ export function ProductDetail({ product }: ProductDetailProps) {
                             </div>
                         </div>
 
-                        {/* Seller Info Card */}
-                        <div className="bg-white border border-slate-200 rounded-xl p-[15px]">
-                            <div className="border-b border-slate-200 pb-3 mb-4">
-                                <div className="text-[12px] text-slate-600 font-['Onest'] mb-2">
-                                    Sold by
-                                </div>
-                                <div className="flex items-center gap-[9px] mb-4">
-                                    <div className="w-10 h-10 bg-gray-200 rounded-full" />
-                                    <div className="flex-1">
-                                        <div className="flex items-center justify-between">
-                                            <span className="text-[14px] text-slate-600 font-['Onest']">
-                                                BD FASHION HOUSE
-                                            </span>
-                                            <div className="w-5 h-5 text-[#3b82f6]">
-                                                ✓
-                                            </div>
-                                        </div>
-                                        <div className="flex items-center gap-1 mt-2">
-                                            <div className="bg-gradient-to-r from-[#FE7D0D] to-[#FFE5AB] text-white px-2 py-1 rounded text-[10px] font-['Onest']">
-                                                Rising Star
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="flex gap-3">
-                                    <button className="flex-1 bg-[#e6f8f4] text-[#00a788] py-2 px-4 rounded text-[14px] font-medium font-['Onest'] flex items-center justify-center gap-2">
-                                        💬 Chat Now
-                                    </button>
-                                    <button className="flex-1 bg-slate-100 text-slate-600 py-2 px-4 rounded text-[14px] font-medium font-['Onest']">
-                                        View Shop
-                                    </button>
-                                </div>
-                            </div>
-
-                            {/* Stats */}
-                            <div className="flex justify-between">
-                                <div>
-                                    <div className="text-[12px] font-medium text-slate-600 font-['Onest']">
-                                        Ship on Time
-                                    </div>
-                                    <div className="text-[28px] text-slate-500 font-['Onest']">
-                                        100%
-                                    </div>
-                                </div>
-                                <div>
-                                    <div className="text-[12px] font-medium text-slate-600 font-['Onest']">
-                                        Chat Response
-                                    </div>
-                                    <div className="text-[28px] text-slate-500 font-['Onest']">
-                                        90%
-                                    </div>
-                                </div>
-                                <div>
-                                    <div className="text-[12px] font-medium text-slate-600 font-['Onest']">
-                                        Shop Rating
-                                    </div>
-                                    <div className="text-[28px] text-slate-500 font-['Onest']">
-                                        99.8%
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <SellerCard seller={product.seller} />
                     </div>
                 </div>
             </div>
