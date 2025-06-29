@@ -8,12 +8,14 @@ interface ProductGridProps {
 
 export async function ProductGrid({ searchParams }: ProductGridProps) {
     const category = typeof searchParams.category === 'string' ? searchParams.category : undefined;
+    const subcategory = typeof searchParams.subcategory === 'string' ? searchParams.subcategory : undefined;
     const search = typeof searchParams.search === 'string' ? searchParams.search : undefined;
     const page = typeof searchParams.page === 'string' ? parseInt(searchParams.page) : 1;
 
     try {
         const result = await getProducts({
             category,
+            subcategory,
             search,
             page,
         });

@@ -12,11 +12,13 @@ import Image from 'next/image';
 export function CartModal() {
     const router = useRouter();
     const [isMounted, setIsMounted] = useState(false);
-    const { items, isOpen, closeCart, updateQuantity, removeItem, getTotal, getItemCount } = useCartStore();
+    const { items, isOpen, openCart, closeCart, updateQuantity, removeItem, getTotal, getItemCount } = useCartStore();
 
     useEffect(() => {
         setIsMounted(true);
-    }, []);
+        // Open the cart when this modal component mounts
+        openCart();
+    }, [openCart]);
 
     if (!isMounted) return null;
 
@@ -27,7 +29,13 @@ export function CartModal() {
 
     const handleViewCart = () => {
         closeCart();
-        router.push('/cart');
+        // Use replace to avoid the intercepting route and force navigation to the actual cart page
+        router.replace('/cart');
+    };
+
+    const handleCheckout = () => {
+        closeCart();
+        router.push('/checkout');
     };
 
     return (
@@ -77,10 +85,13 @@ export function CartModal() {
                                             <div key={`${item.productId}-${JSON.stringify(item.variants)}`} className="flex gap-4">
                                                 <div className="relative w-16 h-16 rounded-lg overflow-hidden bg-gray-100">
                                                     <Image
-                                                        src={item.image}
+                                                        src={item.image || '/images/placeholder-product.svg'}
                                                         alt={item.name}
                                                         fill
                                                         className="object-cover"
+                                                        onError={(e) => {
+                                                            e.currentTarget.src = '/images/placeholder-product.svg';
+                                                        }}
                                                     />
                                                 </div>
                                                 <div className="flex-1 min-w-0">
@@ -134,9 +145,8 @@ export function CartModal() {
                                     <div className="space-y-2">
                                         <Button onClick={handleViewCart} className="w-full" variant="primary">
                                             View Cart
-                                        </Button>
-                                        <Button
-                                            onClick={() => router.push('/checkout')}
+                                        </Button>                        <Button
+                                            onClick={handleCheckout}
                                             className="w-full"
                                             variant="outline"
                                         >

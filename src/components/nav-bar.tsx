@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import {
     FalconIcon,
     MenuIcon,
@@ -20,6 +21,7 @@ export default function NavBar() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [isMounted, setIsMounted] = useState(false);
+    const router = useRouter();
 
     const { openCart, getItemCount } = useCartStore();
 
@@ -37,6 +39,7 @@ export default function NavBar() {
 
     const handleCartClick = () => {
         openCart();
+        router.push('/cart');
     };
 
     return (
@@ -82,26 +85,24 @@ export default function NavBar() {
 
                         {/* Cart */}
                         <div className="relative">
-                            <Link href="/cart" onClick={handleCartClick}>
-                                <div className="relative cursor-pointer flex items-center gap-2">
-                                    <div className="relative">
-                                        <CartIcon />
-                                        {isMounted && getItemCount() > 0 && (
-                                            <div className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-semibold leading-[10px]">
-                                                <span
-                                                    style={{
-                                                        fontFamily: "'Onest', sans-serif",
-                                                        fontSize: '14px',
-                                                        fontWeight: '600'
-                                                    }}
-                                                >
-                                                    {getItemCount()}
-                                                </span>
-                                            </div>
-                                        )}
-                                    </div>
+                            <button onClick={handleCartClick} className="relative cursor-pointer flex items-center gap-2">
+                                <div className="relative">
+                                    <CartIcon />
+                                    {isMounted && getItemCount() > 0 && (
+                                        <div className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-semibold leading-[10px]">
+                                            <span
+                                                style={{
+                                                    fontFamily: "'Onest', sans-serif",
+                                                    fontSize: '14px',
+                                                    fontWeight: '600'
+                                                }}
+                                            >
+                                                {getItemCount()}
+                                            </span>
+                                        </div>
+                                    )}
                                 </div>
-                            </Link>
+                            </button>
                         </div>
 
                         {/* User */}
@@ -135,7 +136,7 @@ export default function NavBar() {
 
             {/* Bottom Navigation - Light Section - Matches Figma */}
             <div className="bg-white px-2 xl:flex">
-                <div className="max-w-7xl  w-full mx-auto flex items-center justify-between py-3">
+                <div className="max-w-7xl  w-full mx-auto flex items-center justify-between md:py-3">
                     {/* Categories */}
                     <div className="lg:flex hidden items-center gap-6">
                         <div className="flex items-center gap-2 border-r border-slate-200 min-w-[158px] pr-6 cursor-pointer">

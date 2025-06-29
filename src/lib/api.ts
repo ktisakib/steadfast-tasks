@@ -6,8 +6,7 @@ const API_BASE = process.env.NEXT_PUBLIC_API_ENDPOINT || '157.230.240.97:9999/ap
 async function fetchApi<T>(endpoint: string): Promise<T> {
   try {
     const url = `http://${API_BASE}${endpoint}`;
-    console.log('Fetching:', url);
-
+   
     const response = await fetch(url, {
       next: { revalidate: 60 }, // Cache for 60 seconds
     });
@@ -32,12 +31,14 @@ export async function getCategories(): Promise<Category[]> {
 // Products API
 export async function getProducts(params?: {
   category?: string;
+  subcategory?: string;
   search?: string;
   page?: number;
 }): Promise<ProductsResponse> {
   const searchParams = new URLSearchParams();
 
   if (params?.category) searchParams.append('category', params.category);
+  if (params?.subcategory) searchParams.append('subcategory', params.subcategory);
   if (params?.search) searchParams.append('search', params.search);
   if (params?.page) searchParams.append('page', params.page.toString());
 

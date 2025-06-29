@@ -31,7 +31,7 @@ export default function RootLayout({
                         {children}
                         {modal}
                         <Footer />
-                    <Toaster position="top-right" richColors />
+                    <Toaster position="top-center" richColors />
                 </NuqsAdapter>
             </body>
         </html>

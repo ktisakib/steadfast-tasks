@@ -17,13 +17,13 @@ export function ProductCard({ product }: ProductCardProps) {
     const discountPrice = parseFloat(product.discount_price);
     const hasDiscount = discountPrice < regularPrice;
     const discountPercentage = hasDiscount ? Math.round(((regularPrice - discountPrice) / regularPrice) * 100) : 0;
-    const [imageError, setImageError] = useState(false);
+
 
     // Handle thumbnail URL - add fallback if thumbnail is missing or invalid
-    const thumbnailSrc = product.thumbnail || '/images/apple.png';
+    const [imageSrc, setImageSrc] = useState(product.thumbnail || '/images/placeholder-product.svg');
 
     // Debug logging
-    console.log('Product:', product.name, 'Thumbnail:', product.thumbnail);
+
 
     return (
         <motion.div
@@ -36,31 +36,24 @@ export function ProductCard({ product }: ProductCardProps) {
             <div className="relative">
                 <ViewTransitionLink
                     href={`/products/${product.slug}`}
-                    className="block"
+                    className="flex items-center justify-center"
                 >
-                    <div className="relative aspect-square overflow-hidden bg-gray-50">
-                        {!imageError ? (
-                            <Image
-                                src={thumbnailSrc}
-                                alt={product.name}
-                                fill
-                                className="object-cover group-hover:scale-105 transition-transform duration-500"
-                                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                                onError={(e) => {
-                                    console.error('Image load error for:', thumbnailSrc);
-                                    setImageError(true);
-                                }}
-                                onLoad={() => {
-                                    console.log('Image loaded successfully:', thumbnailSrc);
-                                }}
-                                unoptimized={true}
-                                priority={false}
-                            />
-                        ) : (
-                            <div className="w-full h-full flex items-center justify-center bg-gray-100">
-                                <ImageIcon className="w-12 h-12 text-gray-400" />
-                            </div>
-                        )}
+                    <div className="relative aspect-square overflow-hidden size-64 flex items-center justify-center bg-gray-50">
+
+                        <Image
+                            src={imageSrc}
+                            alt={product.name}
+                            fill
+                            className="object-cover group-hover:scale-105 transition-transform duration-500"
+                            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                            unoptimized={true}
+                            priority={false}
+                            onError={() => {
+                                console.error('Failed to load product image:', imageSrc);
+                                setImageSrc('/images/placeholder-product.svg');
+                            }}
+                        />
+
 
                         {/* Discount Badge */}
                         {hasDiscount && (

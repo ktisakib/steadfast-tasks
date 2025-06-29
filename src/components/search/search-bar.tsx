@@ -146,9 +146,12 @@ export function SearchBar({ placeholder = "Search for anything....", className =
                                         className="w-full px-3 py-2 text-left hover:bg-gray-50 flex items-center gap-3 transition-colors"
                                     >
                                         <img
-                                            src={product.thumbnail}
+                                            src={product.thumbnail || '/images/placeholder-product.svg'}
                                             alt={product.name}
                                             className="w-8 h-8 object-cover rounded"
+                                            onError={(e) => {
+                                                e.currentTarget.src = '/images/placeholder-product.svg';
+                                            }}
                                         />
                                         <div className="flex-1 min-w-0">
                                             <div className="text-sm font-medium text-gray-900 truncate">
