@@ -10,3 +10,17 @@ export { FavoriteIcon } from './favorite-icon';
 export { ShareIcon } from './share-icon';
 export { SellIcon } from './sell-icon';
 export { ChevronLeftIcon, ChevronDownIcon } from './chevron-icons';
+
+// Footer Icons
+export { VisaIcon } from './visa-icon';
+export { MastercardIcon } from './mastercard-icon';
+export { AmexIcon } from './amex-icon';
+export { BkashIcon } from './bkash-icon';
+export { NagadIcon } from './nagad-icon';
+export { MapPinIcon } from './map-pin-icon';
+export { PhoneIcon } from './phone-icon';
+export { EmailIcon } from './email-icon';
+export { FacebookIcon } from './facebook-icon';
+export { InstagramIcon } from './instagram-icon';
+export { TwitterIcon } from './twitter-icon';
+export { HeadsetIcon } from './headset-icon';
