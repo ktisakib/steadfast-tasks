@@ -1,5 +1,6 @@
 'use client';
 
+import { getCategories } from '@/lib/api';
 import { useQueryStates, parseAsString, parseAsInteger } from 'nuqs';
 import { Suspense } from 'react';
 
