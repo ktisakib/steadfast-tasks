@@ -433,14 +433,23 @@ export default function CartPage() {
 
                         {/* Terms and Conditions */}
                         <div className="flex items-start gap-[7px]">
-                            <div className="bg-teal-500 mt-[5px] rounded-[3.5px] w-[18px] h-[18px] flex items-center justify-center">
-                                <svg className="w-2.5 h-2.5" fill="none" viewBox="0 0 10 10">
-                                    <path d="M3.75 8.50833L1.1625 5.92083L2.34167 4.74167L3.75 6.15417L7.86667 2.03333L9.04583 3.2125L3.75 8.50833Z" fill="white" />
-                                </svg>
-                            </div>
+                            <button
+                                onClick={() => setAgreedToTerms(!agreedToTerms)}
+                                className={`mt-[5px] rounded-[3.5px] w-[18px] h-[18px] flex items-center justify-center border-2 transition-colors ${
+                                    agreedToTerms 
+                                        ? 'bg-teal-500 border-teal-500' 
+                                        : 'bg-white border-slate-300 hover:border-slate-400'
+                                }`}
+                            >
+                                {agreedToTerms && (
+                                    <svg className="w-2.5 h-2.5" fill="none" viewBox="0 0 10 10">
+                                        <path d="M3.75 8.50833L1.1625 5.92083L2.34167 4.74167L3.75 6.15417L7.86667 2.03333L9.04583 3.2125L3.75 8.50833Z" fill="white" />
+                                    </svg>
+                                )}
+                            </button>
                             <div className="flex flex-col font-onest font-normal text-[16px] leading-[24px] text-slate-600 w-[393px] -mt-3">
                                 <p>
-                                    I have read and agree to the <span className="text-slate-600">Terms and Conditions</span>, <span className="text-slate-600">Privacy Policy</span> and <span className="text-slate-600">Refund and Return Policy</span>
+                                    I have read and agree to the <span className="text-blue-600 hover:underline cursor-pointer">Terms and Conditions</span>, <span className="text-blue-600 hover:underline cursor-pointer">Privacy Policy</span> and <span className="text-blue-600 hover:underline cursor-pointer">Refund and Return Policy</span>
                                 </p>
                             </div>
                         </div>
