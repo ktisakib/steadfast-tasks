@@ -12,11 +12,13 @@ import Image from 'next/image';
 export function CartModal() {
     const router = useRouter();
     const [isMounted, setIsMounted] = useState(false);
-    const { items, isOpen, closeCart, updateQuantity, removeItem, getTotal, getItemCount } = useCartStore();
+    const { items, isOpen, openCart, closeCart, updateQuantity, removeItem, getTotal, getItemCount } = useCartStore();
 
     useEffect(() => {
         setIsMounted(true);
-    }, []);
+        // Open the cart when this modal component mounts
+        openCart();
+    }, [openCart]);
 
     if (!isMounted) return null;
 
@@ -141,12 +143,12 @@ export function CartModal() {
                                         <Button onClick={handleViewCart} className="w-full" variant="primary">
                                             View Cart
                                         </Button>                        <Button
-                            onClick={handleCheckout}
-                            className="w-full"
-                            variant="outline"
-                        >
-                            Checkout
-                        </Button>
+                                            onClick={handleCheckout}
+                                            className="w-full"
+                                            variant="outline"
+                                        >
+                                            Checkout
+                                        </Button>
                                     </div>
                                 </div>
                             )}

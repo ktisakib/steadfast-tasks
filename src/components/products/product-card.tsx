@@ -23,7 +23,7 @@ export function ProductCard({ product }: ProductCardProps) {
     const thumbnailSrc = product.thumbnail || '/images/apple.png';
 
     // Debug logging
-   
+
 
     return (
         <motion.div
@@ -36,21 +36,21 @@ export function ProductCard({ product }: ProductCardProps) {
             <div className="relative">
                 <ViewTransitionLink
                     href={`/products/${product.slug}`}
-                    className="block"
+                    className="flex items-center justify-center"
                 >
-                    <div className="relative aspect-square overflow-hidden size-64 bg-gray-50">
+                    <div className="relative aspect-square overflow-hidden size-64 flex items-center justify-center bg-gray-50">
 
-                            <Image
-                                src={thumbnailSrc}
-                                alt={product.name}
-                                fill
-                                className="object-cover group-hover:scale-105 transition-transform duration-500"
-                                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                        <Image
+                            src={thumbnailSrc}
+                            alt={product.name}
+                            fill
+                            className="object-cover group-hover:scale-105 transition-transform duration-500"
+                            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
 
 
-                                unoptimized={true}
-                                priority={false}
-                            />
+                            unoptimized={true}
+                            priority={false}
+                        />
 
 
                         {/* Discount Badge */}

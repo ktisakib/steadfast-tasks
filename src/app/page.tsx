@@ -2,6 +2,9 @@ import { Suspense } from 'react';
 import { Metadata } from 'next';
 import { HeroSection } from '@/components/home/hero-section';
 import { CategoriesShowcaseServer } from '@/components/home/categories-showcase-server';
+import { ProductsShowcase } from '@/components/home/products-showcase';
+import { getProducts } from '@/lib/api';
+import { getProductsAction } from '@/lib/actions';
 
 export const metadata: Metadata = {
     title: 'Falcon - Your Modern E-commerce Platform',
@@ -13,9 +16,14 @@ export const metadata: Metadata = {
     },
 };
 
-export default function Home() {
+export default async function Home() {
+    // Fetch first 8 products for the home page
+    const result = await getProducts({ page: 1 });
+    const products = result.data.slice(0, 8); // Show only 8 products
+
+
     return (
-        <main className="min-h-screen">
+        <main className="min-h-screen max-w-7xl mx-auto">
             {/* Hero Section */}
             <HeroSection />
 
@@ -38,6 +46,31 @@ export default function Home() {
                 }
             >
                 <CategoriesShowcaseServer />
+            </Suspense>
+
+            {/* Products Section */}
+            <Suspense
+                fallback={
+                    <div className="py-12 bg-gray-50">
+                        <div className="container mx-auto px-4">
+                            <div className="h-8 bg-gray-200 rounded w-48 mx-auto mb-8 animate-pulse"></div>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8">
+                                {[...Array(8)].map((_, i) => (
+                                    <div key={i} className="p-4 rounded-lg border bg-white">
+                                        <div className="w-full h-48 bg-gray-200 rounded mb-4 animate-pulse"></div>
+                                        <div className="h-4 bg-gray-200 rounded mb-2 animate-pulse"></div>
+                                        <div className="h-4 bg-gray-200 rounded w-3/4 animate-pulse"></div>
+                                    </div>
+                                ))}
+                            </div>
+                            <div className="text-center">
+                                <div className="h-10 bg-gray-200 rounded w-40 mx-auto animate-pulse"></div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            >
+                <ProductsShowcase products={products} />
             </Suspense>
 
             {/* Features Section */}

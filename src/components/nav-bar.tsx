@@ -39,6 +39,7 @@ export default function NavBar() {
 
     const handleCartClick = () => {
         openCart();
+        router.push('/cart');
     };
 
     return (
