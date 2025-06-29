@@ -101,8 +101,8 @@ export function OrderSummary({
                     onClick={onProceedToCheckout}
                     disabled={!agreedToTerms}
                     className={`w-full py-3 rounded-lg font-medium transition-colors ${agreedToTerms
-                            ? 'bg-teal-500 hover:bg-teal-600 text-white'
-                            : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                        ? 'bg-teal-500 hover:bg-teal-600 text-white'
+                        : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                         }`}
                 >
                     Proceed to Checkout
@@ -114,8 +114,8 @@ export function OrderSummary({
                 <button
                     onClick={() => onTermsChange(!agreedToTerms)}
                     className={`mt-1 w-4 h-4 rounded border-2 flex items-center justify-center transition-colors ${agreedToTerms
-                            ? 'bg-teal-500 border-teal-500'
-                            : 'bg-white border-gray-300 hover:border-gray-400'
+                        ? 'bg-teal-500 border-teal-500'
+                        : 'bg-white border-gray-300 hover:border-gray-400'
                         }`}
                 >
                     {agreedToTerms && (
