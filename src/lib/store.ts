@@ -9,7 +9,7 @@ export const useCartStore = create<CartState>()(
       items: [],
       isOpen: false,
 
-      addItem: (newItem) => {
+      addItem: (newItem, quantity = 1) => {
         const { items } = get();
         const existingItemIndex = items.findIndex(
           (item) =>
@@ -21,7 +21,7 @@ export const useCartStore = create<CartState>()(
           // Update existing item quantity
           const updatedItems = [...items];
           const existingItem = updatedItems[existingItemIndex];
-          const newQuantity = existingItem.quantity + 1;
+          const newQuantity = existingItem.quantity + quantity;
 
           if (newQuantity <= existingItem.stock) {
             updatedItems[existingItemIndex] = {
@@ -34,14 +34,14 @@ export const useCartStore = create<CartState>()(
             showToast.error('Not enough stock available');
           }
         } else {
-          // Add new item
-          if (newItem.stock > 0) {
+          // Add new item with specified quantity
+          if (newItem.stock >= quantity) {
             set({
-              items: [...items, { ...newItem, quantity: 1 }],
+              items: [...items, { ...newItem, quantity }],
             });
-            showToast.cart.added(newItem.name);
+            showToast.cart.added(newItem.name, quantity);
           } else {
-            showToast.error('Item is out of stock');
+            showToast.error('Not enough stock available');
           }
         }
       },

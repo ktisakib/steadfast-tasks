@@ -91,9 +91,9 @@ export function ProductDetail({ product }: ProductDetailProps) {
                 image: allImages[0] || '/placeholder.jpg',
                 variants: variationAttributes,
                 stock: currentStock,
-            });
+            }, optimisticState.quantity);
 
-            toast.success('Product added to cart!');
+            toast.success(`Added ${optimisticState.quantity} item${optimisticState.quantity > 1 ? 's' : ''} to cart!`);
 
             setTimeout(() => {
                 setOptimisticState({ ...optimisticState, isAddingToCart: false });

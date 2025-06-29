@@ -100,9 +100,7 @@ export async function searchProductsAction(query: string, limit = 10): Promise<P
 // Server action to handle newsletter subscription
 export async function subscribeNewsletterAction(email: string) {
   try {
-    // In a real app, this would save to a database or call an external API
-    console.log('Newsletter subscription:', email);
-
+    
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1000));
 
@@ -123,9 +121,7 @@ export async function submitContactFormAction(formData: {
 }) {
   try {
     // In a real app, this would save to a database or send an email
-    console.log('Contact form submission:', formData);
 
-    // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1500));
 
     return { success: true, message: 'Message sent successfully! We\'ll get back to you soon.' };

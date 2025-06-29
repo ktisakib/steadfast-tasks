@@ -26,11 +26,6 @@ export function ProductDetail({ product }: ProductDetailProps) {
     const productImages = product.image ? Object.values(product.image).map(img => img.url).filter(Boolean) : [];
     const allImages = [product.thumbnail, ...productImages].filter(Boolean);
 
-    // Debug: Log the images to see what we're working with
-    console.log('Product:', product.name);
-    console.log('Thumbnail:', product.thumbnail);
-    console.log('Product images:', productImages);
-    console.log('All images:', allImages);
 
     const [selectedImage, setSelectedImage] = useState(0);
     const [quantity, setQuantity] = useState(1);
@@ -139,9 +134,9 @@ export function ProductDetail({ product }: ProductDetailProps) {
                 image: allImages[0] || '/placeholder.jpg',
                 variants: variationAttributes,
                 stock: currentStock,
-            });
+            }, quantity);
 
-            toast.success('Product added to cart!');
+            toast.success(`Added ${quantity} item${quantity > 1 ? 's' : ''} to cart!`);
 
             setTimeout(() => {
                 setIsAddingToCart(false);

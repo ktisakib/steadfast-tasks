@@ -232,7 +232,7 @@ export interface CartItem {
 export interface CartState {
   items: CartItem[];
   isOpen: boolean;
-  addItem: (item: Omit<CartItem, 'quantity'>) => void;
+  addItem: (item: Omit<CartItem, 'quantity'>, quantity?: number) => void;
   removeItem: (productId: string, variants: CartItem['variants']) => void;
   updateQuantity: (productId: string, variants: CartItem['variants'], quantity: number) => void;
   clearCart: () => void;

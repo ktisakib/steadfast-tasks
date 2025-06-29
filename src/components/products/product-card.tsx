@@ -23,7 +23,7 @@ export function ProductCard({ product }: ProductCardProps) {
     const thumbnailSrc = product.thumbnail || '/images/apple.png';
 
     // Debug logging
-    console.log('Product:', product.name, 'Thumbnail:', product.thumbnail);
+   
 
     return (
         <motion.div

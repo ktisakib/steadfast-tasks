@@ -154,10 +154,7 @@ export function CategoryFilters({ categories }: CategoryFiltersProps) {
                                                                     {subcategory.subchilds.map((subchild) => (
                                                                         <button
                                                                             key={subchild.id}
-                                                                            onClick={() => {
-                                                                                // You can implement sub-subchild filtering here if needed
-                                                                                console.log('Sub-subchild selected:', subchild.name);
-                                                                            }}
+                                                                            
                                                                             className="w-full text-left px-3 py-1.5 rounded-md text-[12px] transition-colors font-['Onest'] hover:bg-gray-50 text-slate-400 hover:text-slate-600"
                                                                         >
                                                                             {subchild.name}
