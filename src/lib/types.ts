@@ -228,6 +228,12 @@ export interface CartItem {
     size?: string;
   };
   stock: number;
+  shopName?: string;
+  seller?: {
+    id: number;
+    name: string;
+    slug: string;
+  };
 }
 
 export interface CartState {
