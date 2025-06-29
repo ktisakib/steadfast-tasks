@@ -46,12 +46,9 @@ export function ProductCard({ product }: ProductCardProps) {
                             fill
                             className="object-cover group-hover:scale-105 transition-transform duration-500"
                             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                            unoptimized={true}
+
                             priority={false}
-                            onError={() => {
-                                console.error('Failed to load product image:', imageSrc);
-                                setImageSrc('/images/placeholder-product.svg');
-                            }}
+
                         />
 
 
