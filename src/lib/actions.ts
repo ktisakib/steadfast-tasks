@@ -80,23 +80,17 @@ export async function getCategoriesAction(): Promise<Category[]> {
   }
 }
 
-// Server action to search products
+// Server action to search products (simulated using products API)
 export async function searchProductsAction(query: string, limit = 10): Promise<Product[]> {
   try {
-    const searchParams = new URLSearchParams();
-    searchParams.append('q', query);
-    searchParams.append('limit', limit.toString());
-
-    const response = await fetch(`http://${API_BASE}/shop/search?${searchParams.toString()}`, {
-      next: { revalidate: 60 }, // Cache for 1 minute for search results
+    // Use the regular products API with search parameter instead of dedicated search endpoint
+    const result = await getProductsAction({ 
+      search: query, 
+      page: 1,
+      limit: limit 
     });
-
-    if (!response.ok) {
-      throw new Error(`API Error: ${response.status}`);
-    }
-
-    const data = await response.json();
-    return data.data || [];
+    
+    return result.data || [];
   } catch (error) {
     console.error('Failed to search products:', error);
     return [];

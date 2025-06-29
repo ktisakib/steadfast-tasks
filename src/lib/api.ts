@@ -69,26 +69,41 @@ export async function getProduct(slug: string): Promise<ProductDetail | null> {
   }
 }
 
-// Search suggestions
-export async function getSearchSuggestions(query: string): Promise<string[]> {
+// Simulated search using products API
+export async function searchProducts(params: {
+  q: string;
+  limit?: number;
+}): Promise<Product[]> {
   try {
-    const response = await fetchApi<ApiResponse<string[]>>(`/search/suggestions?q=${encodeURIComponent(query)}`);
-    return response.data || [];
+    // Use the regular products API with search parameter
+    const response = await getProducts({ 
+      search: params.q, 
+      page: 1 
+    });
+    
+    // Limit the results if specified
+    const products = response.data || [];
+    return params.limit ? products.slice(0, params.limit) : products;
   } catch (error) {
+    console.error('Failed to search products:', error);
     return [];
   }
 }
 
-// Search products API
-export async function searchProducts(params: {
-  q: string;
-  limit?: number;
-}): Promise<ApiResponse<Product[]>> {
-  const searchParams = new URLSearchParams();
-  searchParams.append('q', params.q);
-  if (params.limit) searchParams.append('limit', params.limit.toString());
-
-  const endpoint = `/shop/search?${searchParams.toString()}`;
-  const response = await fetchApi<ApiResponse<Product[]>>(endpoint);
-  return response;
+// Simulated search suggestions using product names
+export async function getSearchSuggestions(query: string): Promise<string[]> {
+  try {
+    if (query.length < 2) return [];
+    
+    const products = await searchProducts({ q: query, limit: 10 });
+    const suggestions = products
+      .map(product => product.name)
+      .filter(name => name.toLowerCase().includes(query.toLowerCase()))
+      .slice(0, 5);
+    
+    return suggestions;
+  } catch (error) {
+    console.error('Failed to get search suggestions:', error);
+    return [];
+  }
 }

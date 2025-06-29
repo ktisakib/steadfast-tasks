@@ -9,6 +9,7 @@ export { SearchIcon } from './search-icon';
 export { FavoriteIcon } from './favorite-icon';
 export { ShareIcon } from './share-icon';
 export { SellIcon } from './sell-icon';
+export { RisingStarIcon } from './rising-star-icon';
 export { ChevronLeftIcon, ChevronDownIcon } from './chevron-icons';
 
 // Footer Icons
