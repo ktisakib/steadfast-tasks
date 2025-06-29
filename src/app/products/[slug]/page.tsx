@@ -22,7 +22,8 @@ export default async function ProductPage(props: ProductPageProps) {
     }
 
     const breadcrumbs = [
-        ...generateBreadcrumbs(product.category),
+        { name: 'Home', href: '/' },
+        { name: 'Products', href: '/products' },
         { name: product.name, href: `/products/${product.slug}` }
     ];
 
@@ -60,14 +61,14 @@ export async function generateMetadata(props: {
             openGraph: {
                 title: product.name,
                 description: product.description,
-                images: product.images.slice(0, 4),
+                images: [product.thumbnail],
                 type: 'website',
             },
             twitter: {
                 card: 'summary_large_image',
                 title: product.name,
                 description: product.description,
-                images: [product.images[0]],
+                images: [product.thumbnail],
             },
         };
     } catch (error) {
