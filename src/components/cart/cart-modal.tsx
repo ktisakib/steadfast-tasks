@@ -27,7 +27,13 @@ export function CartModal() {
 
     const handleViewCart = () => {
         closeCart();
-        router.push('/cart');
+        // Use replace to avoid the intercepting route and force navigation to the actual cart page
+        router.replace('/cart');
+    };
+
+    const handleCheckout = () => {
+        closeCart();
+        router.push('/checkout');
     };
 
     return (
@@ -134,14 +140,13 @@ export function CartModal() {
                                     <div className="space-y-2">
                                         <Button onClick={handleViewCart} className="w-full" variant="primary">
                                             View Cart
-                                        </Button>
-                                        <Button
-                                            onClick={() => router.push('/checkout')}
-                                            className="w-full"
-                                            variant="outline"
-                                        >
-                                            Checkout
-                                        </Button>
+                                        </Button>                        <Button
+                            onClick={handleCheckout}
+                            className="w-full"
+                            variant="outline"
+                        >
+                            Checkout
+                        </Button>
                                     </div>
                                 </div>
                             )}
