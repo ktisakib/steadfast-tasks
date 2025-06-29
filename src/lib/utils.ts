@@ -58,7 +58,7 @@ export function getImageUrl(path: string): string {
 
 export function generateBreadcrumbs(category?: { name: string; slug: string; parent?: any }): Array<{ name: string; href: string }> {
   const breadcrumbs = [{ name: 'Home', href: '/' }];
-  
+
   if (category) {
     if (category.parent) {
       breadcrumbs.push({
@@ -71,6 +71,6 @@ export function generateBreadcrumbs(category?: { name: string; slug: string; par
       href: `/products?category=${category.slug}`,
     });
   }
-  
+
   return breadcrumbs;
 }

@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { CartState, CartItem } from '@/lib/types';
-import { toast } from 'sonner';
+import { showToast } from '@/lib/toast';
 
 export const useCartStore = create<CartState>()(
   persist(
@@ -29,9 +29,9 @@ export const useCartStore = create<CartState>()(
               quantity: newQuantity,
             };
             set({ items: updatedItems });
-            toast.success('Item quantity updated in cart');
+            showToast.cart.updated(existingItem.name, newQuantity);
           } else {
-            toast.error('Not enough stock available');
+            showToast.error('Not enough stock available');
           }
         } else {
           // Add new item
@@ -39,9 +39,9 @@ export const useCartStore = create<CartState>()(
             set({
               items: [...items, { ...newItem, quantity: 1 }],
             });
-            toast.success('Item added to cart');
+            showToast.cart.added(newItem.name);
           } else {
-            toast.error('Item is out of stock');
+            showToast.error('Item is out of stock');
           }
         }
       },
@@ -56,7 +56,14 @@ export const useCartStore = create<CartState>()(
             )
         );
         set({ items: updatedItems });
-        toast.success('Item removed from cart');
+        const removedItem = items.find(
+          (item) =>
+            item.productId === productId &&
+            JSON.stringify(item.variants) === JSON.stringify(variants)
+        );
+        if (removedItem) {
+          showToast.cart.removed(removedItem.name);
+        }
       },
 
       updateQuantity: (productId, variants, quantity) => {
@@ -72,7 +79,7 @@ export const useCartStore = create<CartState>()(
             if (quantity <= item.stock) {
               return { ...item, quantity };
             } else {
-              toast.error('Not enough stock available');
+              showToast.error('Not enough stock available');
               return item;
             }
           }
@@ -84,7 +91,7 @@ export const useCartStore = create<CartState>()(
 
       clearCart: () => {
         set({ items: [] });
-        toast.success('Cart cleared');
+        showToast.cart.cleared();
       },
 
       openCart: () => set({ isOpen: true }),

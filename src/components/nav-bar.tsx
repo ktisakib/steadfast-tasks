@@ -14,12 +14,13 @@ import {
     SellIcon
 } from '../icons';
 import { useCartStore } from '@/lib/store';
+import { SearchBar } from '@/components/search/search-bar';
 
 export default function NavBar() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [isMounted, setIsMounted] = useState(false);
-    
+
     const { openCart, getItemCount } = useCartStore();
 
     useEffect(() => {
@@ -40,36 +41,40 @@ export default function NavBar() {
 
     return (
         <nav className="relative font-sans">
-            {/* Top Header - Dark Section */}
-            <div className="bg-slate-800 py-4">
-                <div className="max-w-screen-xl mx-auto px-4 sm:px-8  flex items-center justify-between">
+            {/* Top Header - Dark Section - Matches Figma exactly */}
+            <div className="bg-slate-900 py-4">
+                <div className="max-w-[1280px] mx-auto px-20 flex items-center justify-between">
                     {/* Logo */}
                     <div className="flex items-center gap-1 flex-shrink-0">
                         <Link href="/" className="flex items-center gap-1">
                             <FalconIcon />
-                            <span className="text-2xl font-bold text-white tracking-tight">FALCON</span>
+                            <span
+                                className="text-2xl font-bold text-white tracking-tight"
+                                style={{
+                                    fontFamily: "'Onest', sans-serif",
+                                    fontSize: '24px',
+                                    lineHeight: '24px',
+                                    fontWeight: 'bold'
+                                }}
+                            >
+                                FALCON
+                            </span>
                         </Link>
                     </div>
 
-                    {/* Search Bar - Desktop */}
-                    <div className="hidden md:block flex-1 max-w-3xl mx-8">
-                        <div className="relative flex bg-white rounded-lg h-12 overflow-hidden">
-                            <input
-                                type="text"
-                                placeholder="Search for anything...."
-                                className="flex-1 px-4 border-none outline-none text-base font-normal text-slate-600 placeholder:text-slate-500 bg-transparent"
-                            />
-                            <button className="bg-[#00b795] hover:bg-[#00a788] border-none px-3 cursor-pointer flex items-center justify-center rounded-r-lg">
-                                <SearchIcon />
-                            </button>
-                        </div>
+                    {/* Search Bar - Desktop - Figma width 763px */}
+                    <div className="hidden lg:block">
+                        <SearchBar
+                            placeholder="Search for anything...."
+                            className="w-full"
+                        />
                     </div>
 
                     {/* Right Actions */}
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-5 h-12">
                         {/* Mobile Search Toggle */}
                         <button
-                            className="md:hidden bg-transparent border-none cursor-pointer p-2 text-white"
+                            className="lg:hidden bg-transparent border-none cursor-pointer p-2 text-white"
                             onClick={() => setIsSearchOpen(!isSearchOpen)}
                         >
                             <SearchIcon />
@@ -78,25 +83,35 @@ export default function NavBar() {
                         {/* Cart */}
                         <div className="relative">
                             <Link href="/cart" onClick={handleCartClick}>
-                                <div className="relative p-2 cursor-pointer">
-                                    <CartIcon />
-                                    {isMounted && getItemCount() > 0 && (
-                                        <div className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-semibold leading-none">
-                                            <span>{getItemCount()}</span>
-                                        </div>
-                                    )}
+                                <div className="relative cursor-pointer flex items-center gap-2">
+                                    <div className="relative">
+                                        <CartIcon />
+                                        {isMounted && getItemCount() > 0 && (
+                                            <div className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-semibold leading-[10px]">
+                                                <span
+                                                    style={{
+                                                        fontFamily: "'Onest', sans-serif",
+                                                        fontSize: '14px',
+                                                        fontWeight: '600'
+                                                    }}
+                                                >
+                                                    {getItemCount()}
+                                                </span>
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
                             </Link>
                         </div>
 
                         {/* User */}
-                        <div className="p-2 cursor-pointer">
+                        <div className="cursor-pointer flex items-center gap-2">
                             <UserIcon />
                         </div>
 
                         {/* Mobile Menu Toggle */}
                         <button
-                            className="md:hidden bg-transparent border-none cursor-pointer p-2"
+                            className="lg:hidden bg-transparent border-none cursor-pointer p-2 text-white"
                             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                         >
                             <MenuIcon />
@@ -107,36 +122,51 @@ export default function NavBar() {
 
             {/* Mobile Search Bar */}
             {isSearchOpen && (
-                <div className="bg-slate-800 pb-4 md:hidden">
-                    <div className="max-w-screen-xl mx-auto px-4">
-                        <div className="relative flex bg-white rounded-lg h-12 overflow-hidden">
-                            <input
-                                type="text"
-                                placeholder="Search for anything...."
-                                className="flex-1 px-4 border-none outline-none text-base font-normal text-slate-600 placeholder:text-slate-500 bg-transparent"
-                            />
-                            <button className="bg-[#00b795] hover:bg-[#00a788] border-none px-3 cursor-pointer flex items-center justify-center rounded-r-lg">
-                                <SearchIcon />
-                            </button>
-                        </div>
+                <div className="bg-slate-900 pb-4 lg:hidden">
+                    <div className="max-w-[1280px] mx-auto px-4">
+                        <SearchBar
+                            placeholder="Search for anything...."
+                            className="w-full"
+                            onClose={() => setIsSearchOpen(false)}
+                        />
                     </div>
                 </div>
             )}
 
-            {/* Bottom Navigation - Light Section */}
-            <div className="bg-white border-b border-slate-200 md:py-3">
-                <div className="max-w-screen-xl hidden mx-auto px-4 sm:px-8  md:flex items-center justify-between">
+            {/* Bottom Navigation - Light Section - Matches Figma */}
+            <div className="bg-white">
+                <div className="max-w-[1280px] mx-auto px-20 flex items-center justify-between py-3">
                     {/* Categories */}
                     <div className="flex items-center gap-6">
-                        <div className="flex items-center gap-2 py-2  border-r border-slate-200 min-w-[158px] cursor-pointer">
-                            <MenuIcon />
-                            <span className="text-base font-medium text-slate-900">Categories</span>
+                        <div className="flex items-center gap-2 border-r border-slate-200 min-w-[158px] pr-6 cursor-pointer">
+                            <MenuIcon className="text-[#00a788]" />
+                            <span
+                                className="text-slate-900"
+                                style={{
+                                    fontFamily: "'Onest', sans-serif",
+                                    fontSize: '16px',
+                                    lineHeight: '24px',
+                                    fontWeight: '500'
+                                }}
+                            >
+                                Categories
+                            </span>
                         </div>
 
                         {/* Desktop Categories */}
-                        <div className="flex gap-8">
+                        <div className="hidden xl:flex gap-8">
                             {categories.map((category, index) => (
-                                <a key={index} href="#" className="text-sm font-medium text-slate-900 hover:text-[#00b795] leading-5 whitespace-nowrap no-underline">
+                                <a
+                                    key={index}
+                                    href="#"
+                                    className="text-slate-900 hover:text-[#00b795] whitespace-nowrap no-underline"
+                                    style={{
+                                        fontFamily: "'Onest', sans-serif",
+                                        fontSize: '14px',
+                                        lineHeight: '20px',
+                                        fontWeight: '400'
+                                    }}
+                                >
                                     {category}
                                 </a>
                             ))}
@@ -146,16 +176,46 @@ export default function NavBar() {
                     {/* Utility Links */}
                     <div className="hidden lg:flex gap-6">
                         <div className="flex items-center gap-2 cursor-pointer">
-                            <PackageIcon />
-                            <span className="text-xs hidden xl:flex font-medium text-slate-500 leading-[18px]">TRACK ORDER</span>
+                            <PackageIcon className="text-slate-500" />
+                            <span
+                                className="text-slate-600"
+                                style={{
+                                    fontFamily: "'Onest', sans-serif",
+                                    fontSize: '12px',
+                                    lineHeight: '18px',
+                                    fontWeight: '500'
+                                }}
+                            >
+                                TRACK ORDER
+                            </span>
                         </div>
                         <div className="flex items-center gap-2 cursor-pointer">
-                            <SupportIcon />
-                            <span className="text-xs hidden  xl:flex font-medium text-slate-500 leading-[18px]">HELP CENTER</span>
+                            <SupportIcon className="text-slate-500" />
+                            <span
+                                className="text-slate-600"
+                                style={{
+                                    fontFamily: "'Onest', sans-serif",
+                                    fontSize: '12px',
+                                    lineHeight: '18px',
+                                    fontWeight: '500'
+                                }}
+                            >
+                                HELP CENTER
+                            </span>
                         </div>
                         <div className="flex items-center gap-2 cursor-pointer">
-                            <SellIcon />
-                            <span className="text-xs hidden xl:flex font-medium text-slate-500 leading-[18px]">SELL WITH US</span>
+                            <SellIcon className="text-slate-500" />
+                            <span
+                                className="text-slate-600"
+                                style={{
+                                    fontFamily: "'Onest', sans-serif",
+                                    fontSize: '12px',
+                                    lineHeight: '18px',
+                                    fontWeight: '500'
+                                }}
+                            >
+                                SELL WITH US
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -163,28 +223,78 @@ export default function NavBar() {
 
             {/* Mobile Menu */}
             {isMobileMenuOpen && (
-                <div className="absolute top-full left-0 right-0 bg-white border border-slate-200 border-t-0 z-50 shadow-lg md:hidden">
+                <div className="absolute top-full left-0 right-0 bg-white border border-slate-200 border-t-0 z-50 shadow-lg lg:hidden">
                     <div className="p-4">
                         <div className="mb-6">
-                            <h3 className="text-lg font-semibold text-slate-900 mb-3">Categories</h3>
+                            <h3
+                                className="text-slate-900 mb-3"
+                                style={{
+                                    fontFamily: "'Onest', sans-serif",
+                                    fontSize: '18px',
+                                    lineHeight: '24px',
+                                    fontWeight: '600'
+                                }}
+                            >
+                                Categories
+                            </h3>
                             {categories.map((category, index) => (
-                                <a key={index} href="#" className="block py-3 text-sm text-slate-900 hover:text-[#00b795] no-underline border-b border-slate-100 last:border-b-0">
+                                <a
+                                    key={index}
+                                    href="#"
+                                    className="block py-3 text-slate-900 hover:text-[#00b795] no-underline border-b border-slate-100 last:border-b-0"
+                                    style={{
+                                        fontFamily: "'Onest', sans-serif",
+                                        fontSize: '14px',
+                                        lineHeight: '20px',
+                                        fontWeight: '400'
+                                    }}
+                                >
                                     {category}
                                 </a>
                             ))}
                         </div>
                         <div className="pt-6 border-t border-slate-200 flex flex-col gap-4">
                             <div className="flex items-center gap-2 cursor-pointer">
-                                <PackageIcon />
-                                <span className="text-xs font-medium text-slate-500">TRACK ORDER</span>
+                                <PackageIcon className="text-slate-500" />
+                                <span
+                                    className="text-slate-600"
+                                    style={{
+                                        fontFamily: "'Onest', sans-serif",
+                                        fontSize: '12px',
+                                        lineHeight: '18px',
+                                        fontWeight: '500'
+                                    }}
+                                >
+                                    TRACK ORDER
+                                </span>
                             </div>
                             <div className="flex items-center gap-2 cursor-pointer">
-                                <SupportIcon />
-                                <span className="text-xs font-medium text-slate-500">HELP CENTER</span>
+                                <SupportIcon className="text-slate-500" />
+                                <span
+                                    className="text-slate-600"
+                                    style={{
+                                        fontFamily: "'Onest', sans-serif",
+                                        fontSize: '12px',
+                                        lineHeight: '18px',
+                                        fontWeight: '500'
+                                    }}
+                                >
+                                    HELP CENTER
+                                </span>
                             </div>
                             <div className="flex items-center gap-2 cursor-pointer">
-                                <SellIcon />
-                                <span className="text-xs font-medium text-slate-500">SELL WITH US</span>
+                                <SellIcon className="text-slate-500" />
+                                <span
+                                    className="text-slate-600"
+                                    style={{
+                                        fontFamily: "'Onest', sans-serif",
+                                        fontSize: '12px',
+                                        lineHeight: '18px',
+                                        fontWeight: '500'
+                                    }}
+                                >
+                                    SELL WITH US
+                                </span>
                             </div>
                         </div>
                     </div>
