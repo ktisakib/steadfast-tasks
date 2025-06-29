@@ -105,17 +105,17 @@ export default function NavBar() {
             )}
 
             {/* Bottom Navigation - Light Section */}
-            <div className="bg-white border-b border-slate-200 py-3">
-                <div className="max-w-screen-xl mx-auto px-4 sm:px-8  flex items-center justify-between">
+            <div className="bg-white border-b border-slate-200 md:py-3">
+                <div className="max-w-screen-xl hidden mx-auto px-4 sm:px-8  md:flex items-center justify-between">
                     {/* Categories */}
                     <div className="flex items-center gap-6">
-                        <div className="lg:flex hidden items-center gap-2 py-2  border-r border-slate-200 min-w-[158px] cursor-pointer">
+                        <div className="flex items-center gap-2 py-2  border-r border-slate-200 min-w-[158px] cursor-pointer">
                             <MenuIcon />
                             <span className="text-base font-medium text-slate-900">Categories</span>
                         </div>
 
                         {/* Desktop Categories */}
-                        <div className="hidden md:flex gap-8">
+                        <div className="flex gap-8">
                             {categories.map((category, index) => (
                                 <a key={index} href="#" className="text-sm font-medium text-slate-900 hover:text-[#00b795] leading-5 whitespace-nowrap no-underline">
                                     {category}
