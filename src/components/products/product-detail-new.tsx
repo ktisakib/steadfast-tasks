@@ -91,6 +91,12 @@ export function ProductDetail({ product }: ProductDetailProps) {
                 image: allImages[0] || '/placeholder.jpg',
                 variants: variationAttributes,
                 stock: currentStock,
+                shopName: product.seller?.shop_name || 'BD FASHION HOUSE',
+                seller: product.seller ? {
+                    id: product.seller.id,
+                    name: product.seller.shop_name,
+                    slug: product.seller.username
+                } : undefined,
             }, optimisticState.quantity);
 
             toast.success(`Added ${optimisticState.quantity} item${optimisticState.quantity > 1 ? 's' : ''} to cart!`);

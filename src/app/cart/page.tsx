@@ -1,5 +1,7 @@
 'use client';
 
+
+
 import { useEffect, useState, useTransition } from 'react';
 import { useCartStore } from '@/lib/store';
 import { CartItem } from '@/lib/types';
@@ -23,6 +25,7 @@ export default function CartPage() {
     const [selectAll, setSelectAll] = useState(false);
     const [couponCode, setCouponCode] = useState('');
     const [isApplyingCoupon, setIsApplyingCoupon] = useState(false);
+    const [agreedToTerms, setAgreedToTerms] = useState(false);
     const { items, updateQuantity, removeItem, clearCart, getTotal, getItemCount } = useCartStore();
 
     useEffect(() => {
@@ -61,6 +64,9 @@ export default function CartPage() {
     };
 
     const handleClearAll = () => {
+        startTransition(() => {
+            clearCart();
+        });
         setSelectedItems({});
         setSelectAll(false);
     };
@@ -91,6 +97,15 @@ export default function CartPage() {
 
         setIsApplyingCoupon(false);
         setCouponCode('');
+    };
+
+    const handleProceedToCheckout = () => {
+        if (!agreedToTerms) {
+            alert('Please agree to the Terms & Conditions to proceed');
+            return;
+        }
+        // Navigate to checkout page
+        window.location.href = '/checkout';
     };
 
     if (!isMounted) {
@@ -252,11 +267,16 @@ export default function CartPage() {
 
                                                     {/* Product Variants */}
                                                     <div className="font-onest font-normal text-[16px] leading-[24px] text-slate-600 mb-[35px]">
-                                                        {item.variants.color && item.variants.size ?
-                                                            `Color: ${item.variants.color}; Size: ${item.variants.size}` :
-                                                            item.variants.color ? `Color: ${item.variants.color}` :
-                                                                item.variants.size ? `Size: ${item.variants.size}` : ''
-                                                        }
+                                                        {(() => {
+                                                            const variantPairs = Object.entries(item.variants)
+                                                                .filter(([key, value]) => value && value.trim() !== '')
+                                                                .map(([key, value]) => {
+                                                                    const capitalizedKey = key.charAt(0).toUpperCase() + key.slice(1);
+                                                                    return `${capitalizedKey}: ${value}`;
+                                                                });
+
+                                                            return variantPairs.length > 0 ? variantPairs.join('; ') : 'No variants';
+                                                        })()}
                                                     </div>
 
                                                     {/* Quantity Controller */}
@@ -291,13 +311,13 @@ export default function CartPage() {
                                                             </button>
                                                         </div>
                                                         <button
-                                                        onClick={() => handleRemoveItem(item.productId, item.variants)}
-                                                        className="size-6 hover:opacity-70 transition-opacity"
-                                                    >
-                                                        <svg className="w-full h-full" fill="none" viewBox="0 0 17 17">
-                                                            <path d="M4.90836 2.81507V1.40754H11.9203V2.81507H15.4263V4.22261H14.0239V14.7791C14.0239 15.1678 13.71 15.4829 13.3227 15.4829H3.50597C3.11871 15.4829 2.80478 15.1678 2.80478 14.7791V4.22261H1.40239V2.81507H4.90836ZM4.20716 4.22261V14.0754H12.6215V4.22261H4.20716ZM6.31074 6.33392H7.71313V11.9641H6.31074V6.33392ZM9.11552 6.33392H10.5179V11.9641H9.11552V6.33392Z" fill="#94A3B8" />
-                                                        </svg>
-                                                    </button>
+                                                            onClick={() => handleRemoveItem(item.productId, item.variants)}
+                                                            className="size-6 hover:opacity-70 transition-opacity"
+                                                        >
+                                                            <svg className="w-full h-full" fill="none" viewBox="0 0 17 17">
+                                                                <path d="M4.90836 2.81507V1.40754H11.9203V2.81507H15.4263V4.22261H14.0239V14.7791C14.0239 15.1678 13.71 15.4829 13.3227 15.4829H3.50597C3.11871 15.4829 2.80478 15.1678 2.80478 14.7791V4.22261H1.40239V2.81507H4.90836ZM4.20716 4.22261V14.0754H12.6215V4.22261H4.20716ZM6.31074 6.33392H7.71313V11.9641H6.31074V6.33392ZM9.11552 6.33392H10.5179V11.9641H9.11552V6.33392Z" fill="#94A3B8" />
+                                                            </svg>
+                                                        </button>
                                                     </div>
 
                                                     {/* Delete Button */}
@@ -397,24 +417,39 @@ export default function CartPage() {
                                     </div>
                                 </div>
 
-                                <div className="bg-teal-500 h-[47.381px] rounded w-[370px] flex items-center justify-center hover:bg-teal-600 transition-colors cursor-pointer">
+                                <button
+                                    onClick={handleProceedToCheckout}
+                                    disabled={!agreedToTerms}
+                                    className={`h-[47.381px] rounded w-[370px] flex items-center justify-center transition-colors cursor-pointer ${agreedToTerms
+                                        ? 'bg-teal-500 hover:bg-teal-600'
+                                        : 'bg-slate-300 cursor-not-allowed'
+                                        }`}
+                                >
                                     <span className="font-onest font-medium text-[16px] leading-[24px] text-white">
                                         Proceed to Checkout
                                     </span>
-                                </div>
+                                </button>
                             </div>
                         </div>
 
                         {/* Terms and Conditions */}
                         <div className="flex items-start gap-[7px]">
-                            <div className="bg-teal-500 mt-[5px] rounded-[3.5px] w-[18px] h-[18px] flex items-center justify-center">
-                                <svg className="w-2.5 h-2.5" fill="none" viewBox="0 0 10 10">
-                                    <path d="M3.75 8.50833L1.1625 5.92083L2.34167 4.74167L3.75 6.15417L7.86667 2.03333L9.04583 3.2125L3.75 8.50833Z" fill="white" />
-                                </svg>
-                            </div>
+                            <button
+                                onClick={() => setAgreedToTerms(!agreedToTerms)}
+                                className={`mt-[5px] rounded-[3.5px] w-[18px] h-[18px] flex items-center justify-center border-2 transition-colors ${agreedToTerms
+                                    ? 'bg-teal-500 border-teal-500'
+                                    : 'bg-white border-slate-300 hover:border-slate-400'
+                                    }`}
+                            >
+                                {agreedToTerms && (
+                                    <svg className="w-2.5 h-2.5" fill="none" viewBox="0 0 10 10">
+                                        <path d="M3.75 8.50833L1.1625 5.92083L2.34167 4.74167L3.75 6.15417L7.86667 2.03333L9.04583 3.2125L3.75 8.50833Z" fill="white" />
+                                    </svg>
+                                )}
+                            </button>
                             <div className="flex flex-col font-onest font-normal text-[16px] leading-[24px] text-slate-600 w-[393px] -mt-3">
                                 <p>
-                                    I have read and agree to the <span className="text-slate-600">Terms and Conditions</span>, <span className="text-slate-600">Privacy Policy</span> and <span className="text-slate-600">Refund and Return Policy</span>
+                                    I have read and agree to the <span className="text-blue-600 hover:underline cursor-pointer">Terms and Conditions</span>, <span className="text-blue-600 hover:underline cursor-pointer">Privacy Policy</span> and <span className="text-blue-600 hover:underline cursor-pointer">Refund and Return Policy</span>
                                 </p>
                             </div>
                         </div>

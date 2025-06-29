@@ -226,6 +226,11 @@ export interface CartItem {
   variants: {
     color?: string;
     size?: string;
+    ram?: string;
+    storage?: string;
+    processor?: string;
+    display?: string;
+    [key: string]: string | undefined;
   };
   stock: number;
   shopName?: string;
