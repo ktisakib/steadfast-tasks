@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import {
     FalconIcon,
     MenuIcon,
@@ -12,10 +13,18 @@ import {
     SearchIcon,
     SellIcon
 } from '../icons';
+import { useCartStore } from '@/lib/store';
 
 export default function NavBar() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
+    const [isMounted, setIsMounted] = useState(false);
+    
+    const { openCart, getItemCount } = useCartStore();
+
+    useEffect(() => {
+        setIsMounted(true);
+    }, []);
 
     const categories = [
         'Electronics',
@@ -25,6 +34,10 @@ export default function NavBar() {
         'Sports Gear'
     ];
 
+    const handleCartClick = () => {
+        openCart();
+    };
+
     return (
         <nav className="relative font-sans">
             {/* Top Header - Dark Section */}
@@ -32,8 +45,10 @@ export default function NavBar() {
                 <div className="max-w-screen-xl mx-auto px-4 sm:px-8  flex items-center justify-between">
                     {/* Logo */}
                     <div className="flex items-center gap-1 flex-shrink-0">
-                        <FalconIcon />
-                        <span className="text-2xl font-bold text-white tracking-tight">FALCON</span>
+                        <Link href="/" className="flex items-center gap-1">
+                            <FalconIcon />
+                            <span className="text-2xl font-bold text-white tracking-tight">FALCON</span>
+                        </Link>
                     </div>
 
                     {/* Search Bar - Desktop */}
@@ -62,12 +77,16 @@ export default function NavBar() {
 
                         {/* Cart */}
                         <div className="relative">
-                            <div className="relative p-2 cursor-pointer">
-                                <CartIcon />
-                                <div className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-sm font-semibold leading-none">
-                                    <span>12</span>
+                            <Link href="/cart" onClick={handleCartClick}>
+                                <div className="relative p-2 cursor-pointer">
+                                    <CartIcon />
+                                    {isMounted && getItemCount() > 0 && (
+                                        <div className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-semibold leading-none">
+                                            <span>{getItemCount()}</span>
+                                        </div>
+                                    )}
                                 </div>
-                            </div>
+                            </Link>
                         </div>
 
                         {/* User */}
