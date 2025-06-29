@@ -17,7 +17,7 @@ export function ProductCard({ product }: ProductCardProps) {
     const discountPrice = parseFloat(product.discount_price);
     const hasDiscount = discountPrice < regularPrice;
     const discountPercentage = hasDiscount ? Math.round(((regularPrice - discountPrice) / regularPrice) * 100) : 0;
-    const [imageError, setImageError] = useState(false);
+
 
     // Handle thumbnail URL - add fallback if thumbnail is missing or invalid
     const thumbnailSrc = product.thumbnail || '/images/apple.png';
@@ -38,29 +38,20 @@ export function ProductCard({ product }: ProductCardProps) {
                     href={`/products/${product.slug}`}
                     className="block"
                 >
-                    <div className="relative aspect-square overflow-hidden bg-gray-50">
-                        {!imageError ? (
+                    <div className="relative aspect-square overflow-hidden size-64 bg-gray-50">
+
                             <Image
                                 src={thumbnailSrc}
                                 alt={product.name}
                                 fill
                                 className="object-cover group-hover:scale-105 transition-transform duration-500"
                                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                                onError={(e) => {
-                                    console.error('Image load error for:', thumbnailSrc);
-                                    setImageError(true);
-                                }}
-                                onLoad={() => {
-                                    console.log('Image loaded successfully:', thumbnailSrc);
-                                }}
+
+
                                 unoptimized={true}
                                 priority={false}
                             />
-                        ) : (
-                            <div className="w-full h-full flex items-center justify-center bg-gray-100">
-                                <ImageIcon className="w-12 h-12 text-gray-400" />
-                            </div>
-                        )}
+
 
                         {/* Discount Badge */}
                         {hasDiscount && (
