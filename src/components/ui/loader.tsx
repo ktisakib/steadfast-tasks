@@ -33,12 +33,20 @@ export function Loader({ size = 'md', className }: LoaderProps) {
 
 export function ProductCardSkeleton() {
     return (
-        <div className="border border-gray-200 rounded-lg p-4 space-y-4 animate-pulse">
-            <div className="bg-gray-200 rounded-lg aspect-square w-full" />
-            <div className="space-y-2">
-                <div className="bg-gray-200 h-4 rounded w-3/4" />
-                <div className="bg-gray-200 h-3 rounded w-1/2" />
-                <div className="bg-gray-200 h-4 rounded w-1/4" />
+        <div className="bg-white rounded-[8px] border border-gray-100 overflow-hidden animate-pulse">
+            <div className="bg-gray-200 aspect-square w-full" />
+            <div className="p-3 space-y-3">
+                <div className="space-y-2">
+                    <div className="bg-gray-200 h-4 rounded w-3/4" />
+                    <div className="bg-gray-200 h-4 rounded w-1/2" />
+                </div>
+                <div className="flex items-center gap-1">
+                    <div className="bg-gray-200 h-3 w-16 rounded" />
+                </div>
+                <div className="flex items-center gap-2">
+                    <div className="bg-gray-200 h-5 rounded w-20" />
+                    <div className="bg-gray-200 h-4 rounded w-16" />
+                </div>
             </div>
         </div>
     );

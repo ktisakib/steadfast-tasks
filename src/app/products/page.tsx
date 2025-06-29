@@ -45,21 +45,23 @@ export default async function ProductsPage(props: ProductsPageProps) {
     const searchParams = await props.searchParams;
 
     return (
-        <div className="min-h-screen bg-gray-50">
-            <div className="max-w-screen-xl mx-auto px-4 sm:px-8 py-8">
+        <div className="min-h-screen bg-white">
+            <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
                 <div className="flex flex-col lg:flex-row gap-8">
                     {/* Filters Sidebar */}
-                    <aside className="lg:w-64">
-                        <Suspense fallback={<div className="h-64 bg-white rounded-lg animate-pulse" />}>
-                            <CategoryFiltersServer />
-                        </Suspense>
+                    <aside className="lg:w-64 lg:flex-shrink-0">
+                        <div className="sticky top-6">
+                            <Suspense fallback={<div className="h-64 bg-gray-50 rounded-lg animate-pulse" />}>
+                                <CategoryFiltersServer />
+                            </Suspense>
+                        </div>
                     </aside>
 
                     {/* Products Grid */}
-                    <main className="flex-1">
+                    <main className="flex-1 min-w-0">
                         <Suspense
                             fallback={
-                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                                     {[...Array(12)].map((_, i) => (
                                         <ProductCardSkeleton key={i} />
                                     ))}

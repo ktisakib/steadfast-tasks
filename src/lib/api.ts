@@ -51,7 +51,11 @@ export async function getProducts(params?: {
     total: response.total || 0,
     last_page: response.last_page || 1,
     current_page: response.current_page || 1,
-    next_page_url: response.next_page_url || null
+    next_page_url: response.next_page_url || null,
+    prev_page_url: response.prev_page_url || null,
+    per_page: response.per_page || 20,
+    from: response.from || 0,
+    to: response.to || 0
   };
 }
 

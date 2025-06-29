@@ -230,6 +230,21 @@ export interface ApiResponse<T> {
   last_page?: number;
   current_page?: number;
   next_page_url?: string | null;
+  prev_page_url?: string | null;
+  per_page?: number;
+  from?: number;
+  to?: number;
+}
+
+export interface PaginationMeta {
+  total: number;
+  last_page: number;
+  current_page: number;
+  next_page_url: string | null;
+  prev_page_url: string | null;
+  per_page: number;
+  from: number;
+  to: number;
 }
 
 export interface ProductApiResponse {
@@ -257,6 +272,10 @@ export interface ProductsResponse {
   last_page: number;
   current_page: number;
   next_page_url?: string | null;
+  prev_page_url?: string | null;
+  per_page?: number;
+  from?: number;
+  to?: number;
 }
 
 // Note: SearchParams are now handled using Next.js 15 async params pattern

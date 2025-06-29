@@ -3,7 +3,9 @@
 import { useState, useTransition, useEffect, useMemo } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'motion/react';
-import { Star, Heart, Share2, Minus, Plus, ShoppingCart, Package, ChevronDown } from 'lucide-react';
+import { Star, Minus, Plus, ShoppingCart, Package, ChevronDown } from 'lucide-react';
+import { FavoriteIcon } from '@/icons/favorite-icon';
+import { ShareIcon } from '@/icons/share-icon';
 import { ProductDetail as ProductDetailType, ProductVariation } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -62,7 +64,7 @@ export function ProductDetail({ product }: ProductDetailProps) {
             return attributeNames.every(attrName => {
                 const urlValue = variationState[attrName.toLowerCase()];
                 if (!urlValue) return true; // If no value in URL, it matches any
-                
+
                 const variationAttr = variation.variation_attributes.find(
                     attr => attr.attribute.name === attrName
                 );
@@ -82,9 +84,9 @@ export function ProductDetail({ product }: ProductDetailProps) {
                     acc[attributeName] = [];
                 }
                 // Only add if this specific attribute value isn't already in the list
-                const existingValue = acc[attributeName].find(v => 
-                    v.variation_attributes.some(va => 
-                        va.attribute.name === attributeName && 
+                const existingValue = acc[attributeName].find(v =>
+                    v.variation_attributes.some(va =>
+                        va.attribute.name === attributeName &&
                         va.attribute_option.attribute_value === attr.attribute_option.attribute_value
                     )
                 );
@@ -141,7 +143,7 @@ export function ProductDetail({ product }: ProductDetailProps) {
     };
 
     return (
-        <div className="bg-white flex flex-col items-center justify-center px-20 py-6">
+        <div className="bg-white flex flex-col items-center justify-center px-8 py-6">
             <div className="max-w-[1280px] w-full">
                 <div className="flex flex-row gap-10 items-start">
                     {/* Image Gallery */}
@@ -205,10 +207,10 @@ export function ProductDetail({ product }: ProductDetailProps) {
                                     </h1>
                                     <div className="flex gap-2">
                                         <button className="w-12 h-12 rounded-full border border-gray-200 flex items-center justify-center hover:bg-gray-50">
-                                            <Heart className="w-6 h-6 text-slate-500" />
+                                            <FavoriteIcon className="w-6 h-6 text-slate-500" width={24} height={24} />
                                         </button>
                                         <button className="w-12 h-12 rounded-full border border-gray-200 flex items-center justify-center hover:bg-gray-50">
-                                            <Share2 className="w-6 h-6 text-slate-500" />
+                                            <ShareIcon className="w-6 h-6 text-slate-500" width={24} height={24} />
                                         </button>
                                     </div>
                                 </div>
@@ -287,7 +289,7 @@ export function ProductDetail({ product }: ProductDetailProps) {
                                                 )?.attribute_option.attribute_value}
                                             </span>
                                         </div>
-                                        
+
                                         <div className="flex gap-2">
                                             {variations.map((variation) => {
                                                 const attr = variation.variation_attributes.find(
