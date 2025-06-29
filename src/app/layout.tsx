@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Onest } from "next/font/google";
 import "./globals.css";
+import NavBar from "@/components/nav-bar";
 
 const onest = Onest({
     variable: "--font-onest",
@@ -22,6 +23,8 @@ export default function RootLayout({
             <body
                 className={`${onest.variable} antialiased`}
             >
+                <NavBar />
+
                 {children}
             </body>
         </html>
