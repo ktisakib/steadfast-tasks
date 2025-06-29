@@ -20,7 +20,7 @@ export function ProductCard({ product }: ProductCardProps) {
 
 
     // Handle thumbnail URL - add fallback if thumbnail is missing or invalid
-    const thumbnailSrc = product.thumbnail || '/images/apple.png';
+    const [imageSrc, setImageSrc] = useState(product.thumbnail || '/images/placeholder-product.svg');
 
     // Debug logging
 
@@ -41,15 +41,17 @@ export function ProductCard({ product }: ProductCardProps) {
                     <div className="relative aspect-square overflow-hidden size-64 flex items-center justify-center bg-gray-50">
 
                         <Image
-                            src={thumbnailSrc}
+                            src={imageSrc}
                             alt={product.name}
                             fill
                             className="object-cover group-hover:scale-105 transition-transform duration-500"
                             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-
-
                             unoptimized={true}
                             priority={false}
+                            onError={() => {
+                                console.error('Failed to load product image:', imageSrc);
+                                setImageSrc('/images/placeholder-product.svg');
+                            }}
                         />
 
 

@@ -181,10 +181,13 @@ export default function CartPage() {
                                             <div className="flex gap-4">
                                                 <div className="relative w-24 h-24 rounded-lg overflow-hidden bg-gray-100">
                                                     <Image
-                                                        src={item.image}
+                                                        src={item.image || '/images/placeholder-product.svg'}
                                                         alt={item.name}
                                                         fill
                                                         className="object-cover"
+                                                        onError={(e) => {
+                                                            e.currentTarget.src = '/images/placeholder-product.svg';
+                                                        }}
                                                     />
                                                 </div>
 

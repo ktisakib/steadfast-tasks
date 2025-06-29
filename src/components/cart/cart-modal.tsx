@@ -85,10 +85,13 @@ export function CartModal() {
                                             <div key={`${item.productId}-${JSON.stringify(item.variants)}`} className="flex gap-4">
                                                 <div className="relative w-16 h-16 rounded-lg overflow-hidden bg-gray-100">
                                                     <Image
-                                                        src={item.image}
+                                                        src={item.image || '/images/placeholder-product.svg'}
                                                         alt={item.name}
                                                         fill
                                                         className="object-cover"
+                                                        onError={(e) => {
+                                                            e.currentTarget.src = '/images/placeholder-product.svg';
+                                                        }}
                                                     />
                                                 </div>
                                                 <div className="flex-1 min-w-0">

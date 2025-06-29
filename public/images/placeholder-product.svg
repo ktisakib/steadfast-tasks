@@ -1,0 +1,21 @@
+<svg width="400" height="400" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="400" height="400" fill="#F8F9FA"/>
+
+  <!-- Product placeholder container -->
+  <rect x="50" y="80" width="300" height="240" rx="16" fill="#E9ECEF" stroke="#DEE2E6" stroke-width="2"/>
+
+  <!-- Image icon -->
+  <circle cx="200" cy="160" r="30" fill="#CED4DA"/>
+  <path d="M180 145 L220 145 L220 175 L180 175 Z" fill="#ADB5BD"/>
+  <circle cx="190" cy="155" r="5" fill="#6C757D"/>
+  <path d="M180 170 L195 155 L205 165 L220 150 L220 175 L180 175 Z" fill="#6C757D"/>
+
+  <!-- Text lines -->
+  <rect x="120" y="340" width="160" height="12" rx="6" fill="#CED4DA"/>
+  <rect x="140" y="360" width="120" height="8" rx="4" fill="#E9ECEF"/>
+
+  <!-- Corner decoration -->
+  <rect x="0" y="0" width="40" height="40" fill="#00B795" opacity="0.1"/>
+  <rect x="360" y="360" width="40" height="40" fill="#00B795" opacity="0.1"/>
+</svg>

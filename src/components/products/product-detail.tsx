@@ -24,7 +24,21 @@ export function ProductDetail({ product }: ProductDetailProps) {
 
     // Get product images from the image object with better error handling
     const productImages = product.image ? Object.values(product.image).map(img => img.url).filter(Boolean) : [];
-    const allImages = [product.thumbnail, ...productImages].filter(Boolean);
+
+    // Filter out invalid images and validate URLs
+    const validImages = [product.thumbnail, ...productImages]
+        .filter(Boolean)
+        .filter(url => {
+            try {
+                new URL(url);
+                return true;
+            } catch {
+                console.warn('Invalid image URL:', url);
+                return false;
+            }
+        });
+
+    const allImages = validImages.length > 0 ? validImages : ['/images/placeholder-product.svg'];
 
 
     const [selectedImage, setSelectedImage] = useState(0);
@@ -131,7 +145,7 @@ export function ProductDetail({ product }: ProductDetailProps) {
                 slug: product.slug,
                 name: product.name,
                 price: parseFloat(currentPrice),
-                image: allImages[0] || '/placeholder.jpg',
+                image: allImages[0] || '/images/placeholder-product.svg',
                 variants: variationAttributes,
                 stock: currentStock,
             }, quantity);
@@ -168,7 +182,17 @@ export function ProductDetail({ product }: ProductDetailProps) {
                                             fill
                                             className="object-cover"
                                             priority
-
+                                            onError={(e) => {
+                                                console.error('Failed to load image:', allImages[selectedImage]);
+                                                // Try to show next image or fallback
+                                                const nextImageIndex = selectedImage + 1;
+                                                if (nextImageIndex < allImages.length) {
+                                                    setSelectedImage(nextImageIndex);
+                                                } else {
+                                                    // Show placeholder
+                                                    e.currentTarget.src = '/images/placeholder-product.svg';
+                                                }
+                                            }}
                                         />
                                     ) : (
                                         <div className="w-full h-full bg-gray-200 flex items-center justify-center">
@@ -197,6 +221,10 @@ export function ProductDetail({ product }: ProductDetailProps) {
                                             width={68}
                                             height={68}
                                             className="object-cover"
+                                            onError={(e) => {
+                                                console.error('Failed to load thumbnail:', image);
+                                                e.currentTarget.src = '/images/placeholder-product.svg';
+                                            }}
                                         />
                                     </button>
                                 ))}
