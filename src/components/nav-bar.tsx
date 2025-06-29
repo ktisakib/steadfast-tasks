@@ -125,18 +125,18 @@ export default function NavBar() {
                     </div>
 
                     {/* Utility Links */}
-                    <div className="hidden md:flex gap-6">
+                    <div className="hidden lg:flex gap-6">
                         <div className="flex items-center gap-2 cursor-pointer">
                             <PackageIcon />
-                            <span className="text-xs font-medium text-slate-500 leading-[18px]">TRACK ORDER</span>
+                            <span className="text-xs hidden xl:flex font-medium text-slate-500 leading-[18px]">TRACK ORDER</span>
                         </div>
                         <div className="flex items-center gap-2 cursor-pointer">
                             <SupportIcon />
-                            <span className="text-xs font-medium text-slate-500 leading-[18px]">HELP CENTER</span>
+                            <span className="text-xs hidden  xl:flex font-medium text-slate-500 leading-[18px]">HELP CENTER</span>
                         </div>
                         <div className="flex items-center gap-2 cursor-pointer">
                             <SellIcon />
-                            <span className="text-xs font-medium text-slate-500 leading-[18px]">SELL WITH US</span>
+                            <span className="text-xs hidden xl:flex font-medium text-slate-500 leading-[18px]">SELL WITH US</span>
                         </div>
                     </div>
                 </div>
