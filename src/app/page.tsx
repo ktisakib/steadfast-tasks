@@ -72,7 +72,7 @@ export default async function Home() {
                     <div className="py-12 bg-gray-50">
                         <div className="container mx-auto px-4">
                             <div className="h-8 bg-gray-200 rounded w-48 mx-auto mb-8 animate-pulse"></div>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8">
+                            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
                                 {[...Array(8)].map((_, i) => (
                                     <div key={i} className="p-4 rounded-lg border bg-white">
                                         <div className="w-full h-48 bg-gray-200 rounded mb-4 animate-pulse"></div>
