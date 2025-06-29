@@ -1,3 +1,16 @@
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+    title: 'Shopping Cart | Falcon',
+    description: 'Review your selected items, apply coupons, and proceed to checkout. Secure shopping cart with saved items.',
+    robots: { index: false, follow: true }, // Cart pages typically shouldn't be indexed
+    openGraph: {
+        title: 'Shopping Cart | Falcon',
+        description: 'Review your selected items and proceed to checkout',
+        type: 'website',
+    },
+};
+
 'use client';
 
 import { useEffect, useState, useTransition } from 'react';

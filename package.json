@@ -6,7 +6,11 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "analyze": "node scripts/analyze-bundle.js",
+    "build:analyze": "npm run build && npm run analyze",
+    "type-check": "tsc --noEmit",
+    "clean": "rm -rf .next && rm -rf node_modules/.cache"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.14",

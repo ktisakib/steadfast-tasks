@@ -4,15 +4,33 @@ import { HeroSection } from '@/components/home/hero-section';
 import { CategoriesShowcaseServer } from '@/components/home/categories-showcase-server';
 import { ProductsShowcase } from '@/components/home/products-showcase';
 import { getProducts } from '@/lib/api';
-import { getProductsAction } from '@/lib/actions';
 
 export const metadata: Metadata = {
     title: 'Falcon - Your Modern E-commerce Platform',
     description: 'Discover amazing products at unbeatable prices. Quality guaranteed, satisfaction promised. Shop from a wide range of categories with fast delivery and 24/7 support.',
+    keywords: ['ecommerce', 'online shopping', 'electronics', 'fashion', 'deals', 'falcon store', 'bangladesh shopping'],
     openGraph: {
         title: 'Falcon - Your Modern E-commerce Platform',
         description: 'Discover amazing products at unbeatable prices. Quality guaranteed, satisfaction promised.',
+        url: '/',
         type: 'website',
+        images: [
+            {
+                url: '/og-image.jpg',
+                width: 1200,
+                height: 630,
+                alt: 'Falcon E-commerce Platform',
+            },
+        ],
+    },
+    twitter: {
+        card: 'summary_large_image',
+        title: 'Falcon - Your Modern E-commerce Platform',
+        description: 'Discover amazing products at unbeatable prices. Quality guaranteed, satisfaction promised.',
+        images: ['/og-image.jpg'],
+    },
+    alternates: {
+        canonical: '/',
     },
 };
 
