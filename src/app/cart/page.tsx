@@ -1,17 +1,6 @@
-import { Metadata } from 'next';
-
-export const metadata: Metadata = {
-    title: 'Shopping Cart | Falcon',
-    description: 'Review your selected items, apply coupons, and proceed to checkout. Secure shopping cart with saved items.',
-    robots: { index: false, follow: true }, // Cart pages typically shouldn't be indexed
-    openGraph: {
-        title: 'Shopping Cart | Falcon',
-        description: 'Review your selected items and proceed to checkout',
-        type: 'website',
-    },
-};
-
 'use client';
+
+
 
 import { useEffect, useState, useTransition } from 'react';
 import { useCartStore } from '@/lib/store';
@@ -432,8 +421,8 @@ export default function CartPage() {
                                     onClick={handleProceedToCheckout}
                                     disabled={!agreedToTerms}
                                     className={`h-[47.381px] rounded w-[370px] flex items-center justify-center transition-colors cursor-pointer ${agreedToTerms
-                                            ? 'bg-teal-500 hover:bg-teal-600'
-                                            : 'bg-slate-300 cursor-not-allowed'
+                                        ? 'bg-teal-500 hover:bg-teal-600'
+                                        : 'bg-slate-300 cursor-not-allowed'
                                         }`}
                                 >
                                     <span className="font-onest font-medium text-[16px] leading-[24px] text-white">
@@ -448,8 +437,8 @@ export default function CartPage() {
                             <button
                                 onClick={() => setAgreedToTerms(!agreedToTerms)}
                                 className={`mt-[5px] rounded-[3.5px] w-[18px] h-[18px] flex items-center justify-center border-2 transition-colors ${agreedToTerms
-                                        ? 'bg-teal-500 border-teal-500'
-                                        : 'bg-white border-slate-300 hover:border-slate-400'
+                                    ? 'bg-teal-500 border-teal-500'
+                                    : 'bg-white border-slate-300 hover:border-slate-400'
                                     }`}
                             >
                                 {agreedToTerms && (

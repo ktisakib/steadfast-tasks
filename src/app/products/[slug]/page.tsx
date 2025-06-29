@@ -29,7 +29,7 @@ export default async function ProductPage(props: ProductPageProps) {
     return (
         <div className=" bg-gray-50">
             <div className="max-w-screen-xl mx-auto py-4 ">
-            <Breadcrumb items={breadcrumbs} className="mb-8" />
+                <Breadcrumb items={breadcrumbs} className="mb-8" />
 
                 <Suspense fallback={<ProductDetailSkeleton />}>
                     <ProductDetail product={product} />
@@ -60,7 +60,7 @@ export async function generateMetadata(props: {
         const hasDiscount = discountPrice < regularPrice;
         const discountPercent = hasDiscount ? Math.round(((regularPrice - discountPrice) / regularPrice) * 100) : 0;
 
-        const productDescription = product.description || 
+        const productDescription = product.description ||
             `${product.name} - ${hasDiscount ? `${discountPercent}% OFF! ` : ''}Starting from ৳${discountPrice.toLocaleString()}. ${product.total_stock_qty > 0 ? 'In stock' : 'Out of stock'} - Shop now at Falcon.`;
 
         return {

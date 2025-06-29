@@ -10,7 +10,7 @@ const path = require('path');
 
 function analyzeBundle() {
   const buildDir = path.join(process.cwd(), '.next');
-  
+
   if (!fs.existsSync(buildDir)) {
     console.log('❌ No build found. Please run "npm run build" first.');
     return;
@@ -29,24 +29,24 @@ function analyzeBundle() {
 
   function analyzeDirectory(dir, prefix = '') {
     const files = fs.readdirSync(dir);
-    
+
     files.forEach(file => {
       const filePath = path.join(dir, file);
       const stat = fs.statSync(filePath);
-      
+
       if (stat.isDirectory()) {
         analyzeDirectory(filePath, prefix + file + '/');
       } else if (file.endsWith('.js') || file.endsWith('.css')) {
         const size = stat.size;
         const type = file.endsWith('.js') ? 'js' : 'css';
-        
+
         chunks.push({
           name: prefix + file,
           size: size,
           sizeFormatted: formatBytes(size),
           type: type
         });
-        
+
         totalSize[type] += size;
       }
     });
@@ -70,7 +70,7 @@ function analyzeBundle() {
   });
 
   console.log('\n💡 Optimization Recommendations:');
-  
+
   if (totalSize.js > 1024 * 1024) { // 1MB
     console.log('⚠️  JavaScript bundle is large (>1MB). Consider:');
     console.log('   - Code splitting with dynamic imports');
@@ -93,7 +93,7 @@ function analyzeBundle() {
   }
 
   console.log('\n✅ Performance is looking good!');
-  
+
   // Generate report file
   const report = {
     timestamp: new Date().toISOString(),
@@ -122,20 +122,20 @@ function formatBytes(bytes) {
 
 function generateRecommendations(totalSize, chunks) {
   const recommendations = [];
-  
+
   if (totalSize.js > 1024 * 1024) {
     recommendations.push('Consider code splitting for JavaScript bundles >1MB');
   }
-  
+
   if (totalSize.css > 512 * 1024) {
     recommendations.push('Consider CSS optimization for stylesheets >512KB');
   }
-  
+
   const largeChunks = chunks.filter(chunk => chunk.size > 256 * 1024);
   if (largeChunks.length > 0) {
     recommendations.push(`Split large chunks: ${largeChunks.map(c => c.name).join(', ')}`);
   }
-  
+
   return recommendations;
 }
 
