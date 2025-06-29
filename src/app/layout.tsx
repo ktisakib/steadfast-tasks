@@ -27,10 +27,10 @@ export default function RootLayout({
         <html lang="en">
             <body className={`${onest.variable} antialiased`}>
                 <NuqsAdapter>
-                    <NavBar />
-                    {children}
-                    {modal}
-                    <Footer />
+                        <NavBar />
+                        {children}
+                        {modal}
+                        <Footer />
                     <Toaster position="top-right" richColors />
                 </NuqsAdapter>
             </body>
