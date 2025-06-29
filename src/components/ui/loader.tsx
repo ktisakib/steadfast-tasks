@@ -33,19 +33,42 @@ export function Loader({ size = 'md', className }: LoaderProps) {
 
 export function ProductCardSkeleton() {
     return (
-        <div className="bg-white rounded-[8px] border border-gray-100 overflow-hidden animate-pulse">
-            <div className="bg-gray-200 aspect-square w-full" />
-            <div className="p-3 space-y-3">
-                <div className="space-y-2">
-                    <div className="bg-gray-200 h-4 rounded w-3/4" />
-                    <div className="bg-gray-200 h-4 rounded w-1/2" />
+        <div className="group bg-white rounded-[8px] overflow-hidden border border-gray-100 animate-pulse">
+            {/* Image area with badge positioning */}
+            <div className="relative">
+                <div className="aspect-square overflow-hidden bg-gray-200">
+                    {/* Discount badge skeleton (top left) */}
+                    <div className="absolute top-2 left-2 bg-gray-300 rounded-[4px] h-6 w-16" />
+                    {/* Badge skeleton (top right) */}
+                    <div className="absolute top-2 right-2 bg-gray-300 rounded-[4px] h-5 w-12" />
+                    {/* Stock badge skeleton (bottom left) */}
+                    <div className="absolute bottom-2 left-2 bg-gray-300 rounded-[4px] h-5 w-20" />
                 </div>
-                <div className="flex items-center gap-1">
-                    <div className="bg-gray-200 h-3 w-16 rounded" />
+                {/* Favorite button skeleton - positioned dynamically like real component */}
+                <div className="absolute top-12 right-2 w-8 h-8 bg-gray-300 rounded-full" />
+            </div>
+
+            <div className="p-3">
+                {/* Product title - matches exact spacing and height from actual component */}
+                <div className="min-h-[40px] space-y-1">
+                    <div className="bg-gray-200 h-[20px] rounded w-4/5" />
+                    <div className="bg-gray-200 h-[20px] rounded w-3/5" />
                 </div>
-                <div className="flex items-center gap-2">
-                    <div className="bg-gray-200 h-5 rounded w-20" />
-                    <div className="bg-gray-200 h-4 rounded w-16" />
+
+                {/* Rating section - matches mt-2 spacing */}
+                <div className="mt-2 flex items-center gap-1">
+                    <div className="flex items-center gap-0.5">
+                        {[...Array(5)].map((_, i) => (
+                            <div key={i} className="bg-gray-200 w-3 h-3 rounded-sm" />
+                        ))}
+                    </div>
+                    <div className="bg-gray-200 h-3 w-8 rounded ml-1" />
+                </div>
+
+                {/* Price section - matches mt-2 spacing and actual sizes */}
+                <div className="mt-2 flex items-center gap-2">
+                    <div className="bg-gray-200 h-5 rounded w-20" /> {/* Main price */}
+                    <div className="bg-gray-200 h-4 rounded w-16" /> {/* Strikethrough price */}
                 </div>
             </div>
         </div>

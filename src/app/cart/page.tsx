@@ -4,7 +4,7 @@ import { useEffect, useState, useTransition, useOptimistic } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'motion/react';
-import { Minus, Plus, Trash2, ShoppingBag, ArrowLeft, Tag } from 'lucide-react';
+import { Minus, Plus, Trash2, ShoppingBag, ArrowLeft, Tag, Store, ChevronRight, Check } from 'lucide-react';
 import { useCartStore } from '@/lib/store';
 import { formatPrice } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -19,6 +19,9 @@ interface OptimisticCartState {
 export default function CartPage() {
     const [isMounted, setIsMounted] = useState(false);
     const [isPending, startTransition] = useTransition();
+    const [selectAll, setSelectAll] = useState(true);
+    const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
+    const [agreeToTerms, setAgreeToTerms] = useState(true);
     const { items, updateQuantity, removeItem, clearCart, getTotal, getItemCount } = useCartStore();
 
     const [optimisticState, setOptimisticState] = useOptimistic<OptimisticCartState>({
@@ -29,7 +32,12 @@ export default function CartPage() {
 
     useEffect(() => {
         setIsMounted(true);
-    }, []);
+        // Initialize all items as selected
+        if (items.length > 0) {
+            const allItemIds = new Set(items.map((item, index) => `${item.productId}-${index}`));
+            setSelectedItems(allItemIds);
+        }
+    }, [items]);
 
     const handleQuantityUpdate = (productId: string, variants: any, quantity: number) => {
         startTransition(() => {
@@ -43,7 +51,26 @@ export default function CartPage() {
         });
     };
 
-    const handleApplyCoupon = () => {
+    const handleSelectAll = () => {
+        if (selectAll) {
+            setSelectedItems(new Set());
+        } else {
+            const allItemIds = new Set(items.map((item, index) => `${item.productId}-${index}`));
+            setSelectedItems(allItemIds);
+        }
+        setSelectAll(!selectAll);
+    };
+
+    const handleItemSelect = (itemId: string) => {
+        const newSelectedItems = new Set(selectedItems);
+        if (selectedItems.has(itemId)) {
+            newSelectedItems.delete(itemId);
+        } else {
+            newSelectedItems.add(itemId);
+        }
+        setSelectedItems(newSelectedItems);
+        setSelectAll(newSelectedItems.size === items.length);
+    }; const handleApplyCoupon = () => {
         startTransition(() => {
             setOptimisticState({ ...optimisticState, isApplyingCoupon: true });
 
@@ -58,6 +85,22 @@ export default function CartPage() {
             }, 1000);
         });
     };
+
+    // Group items by seller (for now, all items go to same seller)
+    const groupedItems = items.reduce((acc, item, index) => {
+        const sellerId = 'bd-fashion-house';
+        const sellerName = 'BD FASHION HOUSE';
+
+        if (!acc[sellerId]) {
+            acc[sellerId] = {
+                sellerName,
+                items: []
+            };
+        }
+
+        acc[sellerId].items.push({ ...item, itemId: `${item.productId}-${index}` });
+        return acc;
+    }, {} as Record<string, { sellerName: string; items: any[] }>);
 
     if (!isMounted) {
         return (
@@ -77,9 +120,16 @@ export default function CartPage() {
     ];
 
     return (
-        <div className="min-h-screen bg-gray-50">
-            <div className="max-w-screen-xl mx-auto px-4 sm:px-8 py-8">
-                <Breadcrumb items={breadcrumbs} className="mb-8" />
+        <div className="min-h-screen bg-slate-100 font-['Onest']">
+            <div className="max-w-[1269px] mx-auto px-12 py-8">
+                {/* Breadcrumb */}
+                <div className="flex items-center gap-1 mb-8">
+                    <span className="text-[14px] font-normal text-slate-900 leading-[20px]">Home</span>
+                    <svg className="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                    <span className="text-[14px] font-normal text-slate-600 leading-[20px]">My Cart</span>
+                </div>
 
                 <div className="flex items-center gap-3 mb-8">
                     <Link href="/products">

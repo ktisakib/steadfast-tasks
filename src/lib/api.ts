@@ -76,11 +76,11 @@ export async function searchProducts(params: {
 }): Promise<Product[]> {
   try {
     // Use the regular products API with search parameter
-    const response = await getProducts({ 
-      search: params.q, 
-      page: 1 
+    const response = await getProducts({
+      search: params.q,
+      page: 1
     });
-    
+
     // Limit the results if specified
     const products = response.data || [];
     return params.limit ? products.slice(0, params.limit) : products;
@@ -94,13 +94,13 @@ export async function searchProducts(params: {
 export async function getSearchSuggestions(query: string): Promise<string[]> {
   try {
     if (query.length < 2) return [];
-    
+
     const products = await searchProducts({ q: query, limit: 10 });
     const suggestions = products
       .map(product => product.name)
       .filter(name => name.toLowerCase().includes(query.toLowerCase()))
       .slice(0, 5);
-    
+
     return suggestions;
   } catch (error) {
     console.error('Failed to get search suggestions:', error);

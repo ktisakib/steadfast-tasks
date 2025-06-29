@@ -6,13 +6,13 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Star, Minus, Plus, ShoppingCart, Package, ChevronDown } from 'lucide-react';
 import { FavoriteIcon } from '@/icons/favorite-icon';
 import { ShareIcon } from '@/icons/share-icon';
+import { SellerCard } from './seller-card';
 import { ProductDetail as ProductDetailType, ProductVariation } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { useCartStore } from '@/lib/store';
 import { toast } from 'sonner';
 import { useQueryStates, parseAsString } from 'nuqs';
-import { SellerCard } from './seller-card';
 
 interface ProductDetailProps {
     product: ProductDetailType;

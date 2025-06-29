@@ -223,7 +223,7 @@ export default function Footer() {
             <div className="border-t border-white/20"></div>
 
             {/* Copyright */}
-            <div className="max-w-screen-xl mx-auto px-4 sm:px-8 lg:px-20 py-4">
+            <div className="max-w-screen-xl mx-auto px-4 sm:px-8 lg:px-12 py-4">
                 <p className="text-sm text-white text-center">
                     Falcon ©2025. Design by xyz
                 </p>

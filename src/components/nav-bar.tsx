@@ -42,8 +42,8 @@ export default function NavBar() {
     return (
         <nav className="relative font-sans">
             {/* Top Header - Dark Section - Matches Figma exactly */}
-            <div className="bg-slate-900 py-4">
-                <div className="max-w-[1280px] mx-auto  flex items-center justify-between">
+            <div className="bg-slate-900  py-4">
+                <div className="max-w-[1280px] px-2 mx-auto  flex items-center justify-between">
                     {/* Logo */}
                     <div className="flex items-center gap-1 flex-shrink-0">
                         <Link href="/" className="flex items-center gap-1">
@@ -111,7 +111,7 @@ export default function NavBar() {
 
                         {/* Mobile Menu Toggle */}
                         <button
-                            className="lg:hidden bg-transparent border-none cursor-pointer p-2 text-white"
+                            className="xl:hidden bg-transparent border-none cursor-pointer p-2 text-white"
                             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                         >
                             <MenuIcon />
@@ -122,7 +122,7 @@ export default function NavBar() {
 
             {/* Mobile Search Bar */}
             {isSearchOpen && (
-                <div className="bg-slate-900 pb-4 lg:hidden">
+                <div className="bg-slate-900 pb-4 md:hidden">
                     <div className="max-w-[1280px] mx-auto px-4">
                         <SearchBar
                             placeholder="Search for anything...."
@@ -134,10 +134,10 @@ export default function NavBar() {
             )}
 
             {/* Bottom Navigation - Light Section - Matches Figma */}
-            <div className="bg-white">
-                <div className="max-w-[1280px] mx-auto flex items-center justify-between py-3">
+            <div className="bg-white px-2 xl:flex">
+                <div className="max-w-7xl  w-full mx-auto flex items-center justify-between py-3">
                     {/* Categories */}
-                    <div className="flex items-center gap-6">
+                    <div className="lg:flex hidden items-center gap-6">
                         <div className="flex items-center gap-2 border-r border-slate-200 min-w-[158px] pr-6 cursor-pointer">
                             <MenuIcon className="text-[#00a788]" />
                             <span
@@ -154,7 +154,7 @@ export default function NavBar() {
                         </div>
 
                         {/* Desktop Categories */}
-                        <div className="hidden xl:flex gap-8">
+                        <div className=" hidden  lg:flex xl:gap-8 gap-4">
                             {categories.map((category, index) => (
                                 <a
                                     key={index}
@@ -174,17 +174,12 @@ export default function NavBar() {
                     </div>
 
                     {/* Utility Links */}
-                    <div className="hidden lg:flex gap-6">
+                    <div className="hidden md:flex gap-6">
                         <div className="flex items-center gap-2 cursor-pointer">
                             <PackageIcon className="text-slate-500" />
                             <span
-                                className="text-slate-600"
-                                style={{
-                                    fontFamily: "'Onest', sans-serif",
-                                    fontSize: '12px',
-                                    lineHeight: '18px',
-                                    fontWeight: '500'
-                                }}
+                                className="text-slate-600 max-xl:hidden"
+
                             >
                                 TRACK ORDER
                             </span>
@@ -192,13 +187,8 @@ export default function NavBar() {
                         <div className="flex items-center gap-2 cursor-pointer">
                             <SupportIcon className="text-slate-500" />
                             <span
-                                className="text-slate-600"
-                                style={{
-                                    fontFamily: "'Onest', sans-serif",
-                                    fontSize: '12px',
-                                    lineHeight: '18px',
-                                    fontWeight: '500'
-                                }}
+                                className="text-slate-600 max-xl:hidden"
+
                             >
                                 HELP CENTER
                             </span>
@@ -206,13 +196,8 @@ export default function NavBar() {
                         <div className="flex items-center gap-2 cursor-pointer">
                             <SellIcon className="text-slate-500" />
                             <span
-                                className="text-slate-600"
-                                style={{
-                                    fontFamily: "'Onest', sans-serif",
-                                    fontSize: '12px',
-                                    lineHeight: '18px',
-                                    fontWeight: '500'
-                                }}
+                                className="text-slate-600 max-xl:hidden"
+
                             >
                                 SELL WITH US
                             </span>

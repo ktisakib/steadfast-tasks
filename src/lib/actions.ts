@@ -84,12 +84,12 @@ export async function getCategoriesAction(): Promise<Category[]> {
 export async function searchProductsAction(query: string, limit = 10): Promise<Product[]> {
   try {
     // Use the regular products API with search parameter instead of dedicated search endpoint
-    const result = await getProductsAction({ 
-      search: query, 
+    const result = await getProductsAction({
+      search: query,
       page: 1,
-      limit: limit 
+      limit: limit
     });
-    
+
     return result.data || [];
   } catch (error) {
     console.error('Failed to search products:', error);
