@@ -254,7 +254,7 @@ export default function CartPage() {
                                                 <div
                                                     className="w-[99.92px] h-[100.287px] bg-center bg-cover bg-no-repeat rounded-[5px] flex-shrink-0"
                                                     style={{
-                                                        backgroundImage: `url(${item.image || '/images/placeholder-product.png'})`
+                                                        backgroundImage: `url(${item.image})`
                                                     }}
                                                 />
 
