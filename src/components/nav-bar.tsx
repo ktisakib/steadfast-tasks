@@ -117,7 +117,7 @@ export default function NavBar() {
                         {/* Desktop Categories */}
                         <div className="hidden md:flex gap-8">
                             {categories.map((category, index) => (
-                                <a key={index} href="#" className="text-sm font-normal text-slate-900 hover:text-[#00b795] leading-5 whitespace-nowrap no-underline">
+                                <a key={index} href="#" className="text-sm font-medium text-slate-900 hover:text-[#00b795] leading-5 whitespace-nowrap no-underline">
                                     {category}
                                 </a>
                             ))}
