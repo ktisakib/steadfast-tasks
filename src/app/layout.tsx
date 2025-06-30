@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import { Onest } from "next/font/google";
 import "./globals.css";
-import NavBar from "@/components/nav-bar";
 import Footer from "@/components/footer";
 import { Toaster } from "sonner";
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
+import { getCategories } from "@/lib/api";
+import { NavBar } from "@/components/nav/nav-bar";
 
 const onest = Onest({
     variable: "--font-onest",
@@ -72,11 +73,14 @@ export const metadata: Metadata = {
     },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
     children,
 }: Readonly<{
     children: React.ReactNode;
 }>) {
+
+    const categories = await getCategories();
+
     return (
         <html lang="en">
             <head>
@@ -90,7 +94,7 @@ export default function RootLayout({
             </head>
             <body className={`${onest.variable} antialiased`}>
                 <NuqsAdapter>
-                    <NavBar />
+                    <NavBar categories={categories} />
                     {children}
                     <Footer />
                     <Toaster position="top-center" richColors />
