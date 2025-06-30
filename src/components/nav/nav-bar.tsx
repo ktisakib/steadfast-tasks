@@ -5,6 +5,7 @@ import Link from 'next/link';
 import {
     FalconIcon,
     MenuIcon,
+    CloseIcon,
     PackageIcon,
     SupportIcon,
     UserIcon,
@@ -105,7 +106,7 @@ export function NavBar({ categories }: NavBarProps) {
                             className="xl:hidden bg-transparent border-none cursor-pointer p-2 text-white"
                             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                         >
-                            <MenuIcon />
+                            {isMobileMenuOpen ? <CloseIcon /> : <MenuIcon />}
                         </button>
                     </div>
                 </div>

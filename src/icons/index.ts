@@ -1,5 +1,6 @@
 export { FalconIcon } from './falcon-icon';
 export { MenuIcon } from './menu-icon';
+export { CloseIcon } from './close-icon';
 export { PackageIcon } from './package-icon';
 export { SupportIcon } from './support-icon';
 export { ShopIcon } from './shop-icon';

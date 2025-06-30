@@ -7,6 +7,10 @@ import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import { getCategories } from "@/lib/api";
 import { NavBar } from "@/components/nav/nav-bar";
 
+
+
+export const experimental_ppr = true
+
 const onest = Onest({
     variable: "--font-onest",
     subsets: ["latin"],
