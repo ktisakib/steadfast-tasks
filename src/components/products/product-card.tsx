@@ -31,22 +31,21 @@ export function ProductCard({ product }: ProductCardProps) {
             animate={{ opacity: 1, y: 0 }}
             whileHover={{ y: -2 }}
             transition={{ duration: 0.2 }}
-            className="group bg-white rounded-[8px] overflow-hidden hover:shadow-lg transition-all duration-300 border border-gray-100"
+            className="group bg-white rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300 border border-gray-100"
         >
             <div className="relative">
                 <ViewTransitionLink
                     href={`/products/${product.slug}`}
-                    className="flex items-center justify-center"
+                    className="flex items-center justify-center w-full"
                 >
-                    <div className="relative aspect-square overflow-hidden size-64 flex items-center justify-center bg-gray-50">
+                    <div className="relative aspect-square overflow-hidden  w-full flex items-center justify-center ">
 
                         <Image
                             src={imageSrc}
                             alt={product.name}
-                            fill
-                            className="object-cover group-hover:scale-105 transition-transform duration-500"
-                            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-
+                            height={256}
+                            width={256}
+                            className=" group-hover:scale-105 h-full w-full transition-transform duration-500"
                             priority={false}
 
                         />

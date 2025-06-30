@@ -35,7 +35,7 @@ export async function ProductGrid({ searchParams }: ProductGridProps) {
         return (
             <div className="space-y-6">
                 <div className="flex items-center justify-between border-b border-gray-100 pb-4">
-                    <p className="text-gray-600 text-[14px] font-['Onest']">
+                    <p className="text-gray-600 text-sm ">
                         Showing {products.length} of {total} products
                     </p>
                 </div>

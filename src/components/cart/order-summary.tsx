@@ -113,7 +113,7 @@ export function OrderSummary({
             <div className="flex items-start gap-3 mt-4">
                 <button
                     onClick={() => onTermsChange(!agreedToTerms)}
-                    className={`mt-1 w-4 h-4 rounded border-2 flex items-center justify-center transition-colors ${agreedToTerms
+                    className={`mt-1 w-6 h-4 rounded border-2 flex items-center justify-center transition-colors ${agreedToTerms
                         ? 'bg-teal-500 border-teal-500'
                         : 'bg-white border-gray-300 hover:border-gray-400'
                         }`}
