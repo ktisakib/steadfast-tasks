@@ -24,7 +24,7 @@ export function ShopSection({
     onRemoveItem,
 }: ShopSectionProps) {
     return (
-        <div className="bg-white rounded-lg p-4 mb-4">
+        <div className="bg-white rounded-lg p-3 sm:p-4 mb-4">
             {/* Store Header */}
             <div className="flex items-center gap-3 pb-4 border-b border-gray-200 mb-4">
                 <div className="flex items-center gap-2">
@@ -53,7 +53,7 @@ export function ShopSection({
                 {storeItems.map((item, index) => {
                     const itemKey = `${item.productId}-${JSON.stringify(item.variants)}`;
                     return (
-                        <div key={itemKey} className={`py-4 ${index > 0 ? 'border-t border-gray-100' : ''}`}>
+                        <div key={itemKey} className={`py-3 sm:py-4 ${index > 0 ? 'border-t border-gray-100' : ''}`}>
                             <CartItemCard
                                 item={item}
                                 itemKey={itemKey}

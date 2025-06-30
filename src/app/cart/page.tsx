@@ -5,6 +5,7 @@ import { useCartStore } from '@/lib/store';
 import { CartItem } from '@/lib/types';
 import { ShopSection } from '@/components/cart/shop-section';
 import { OrderSummary } from '@/components/cart/order-summary';
+import Link from 'next/link';
 
 interface CouponState {
     code: string;
@@ -24,7 +25,7 @@ export default function CartPage() {
     const [selectAll, setSelectAll] = useState(false);
     const [couponCode, setCouponCode] = useState('');
     const [isApplyingCoupon, setIsApplyingCoupon] = useState(false);
-    const [agreedToTerms, setAgreedToTerms] = useState(false);
+    const [agreedToTerms, setAgreedToTerms] = useState(true);
     const { items, updateQuantity, removeItem, clearCart, getTotal, getItemCount } = useCartStore();
 
     useEffect(() => {
@@ -155,7 +156,7 @@ export default function CartPage() {
     if (items.length === 0) {
         return (
             <div className="bg-gray-50 min-h-screen py-4 sm:py-8">
-                <div className="max-w-7xl mx-auto px-4">
+                <div className="max-w-7xl mx-auto px-3 sm:px-4">
                     {/* Breadcrumb */}
                     <div className="flex items-center gap-2 mb-6">
                         <span className="text-sm text-gray-900">Home</span>
@@ -168,9 +169,9 @@ export default function CartPage() {
                     <div className="bg-white rounded-lg p-6 sm:p-8 text-center">
                         <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-4">Your cart is empty</h2>
                         <p className="text-gray-600 mb-6">Add some items to get started</p>
-                        <a href="/products" className="bg-teal-500 text-white px-6 py-3 rounded-lg hover:bg-teal-600 transition-colors">
+                        <Link href="/products" className="bg-teal-500 text-white px-6 py-3 rounded-lg hover:bg-teal-600 transition-colors">
                             Continue Shopping
-                        </a>
+                        </Link>
                     </div>
                 </div>
             </div>
@@ -179,7 +180,7 @@ export default function CartPage() {
 
     return (
         <div className="bg-gray-50 min-h-screen py-4 sm:py-8">
-            <div className="max-w-7xl mx-auto px-4">
+            <div className="max-w-7xl mx-auto px-3 sm:px-4">
                 {/* Breadcrumb */}
                 <div className="flex items-center gap-2 mb-6">
                     <span className="text-sm text-gray-900">Home</span>
@@ -192,7 +193,7 @@ export default function CartPage() {
                 {/* Main Content */}
                 <div className="flex flex-col lg:flex-row gap-6 items-start">
                     {/* Cart Items Section */}
-                    <div className="bg-white rounded-lg p-4 sm:p-6 w-full lg:flex-1">
+                    <div className="bg-white rounded-lg p-3 sm:p-4 md:p-6 w-full lg:flex-1">
                         {/* Cart Header */}
                         <div className="mb-6 flex flex-col sm:flex-row justify-between items-start border-b border-gray-200 pb-4">
                             <h1 className="text-2xl sm:text-3xl font-semibold text-gray-900 mb-4 sm:mb-0">
