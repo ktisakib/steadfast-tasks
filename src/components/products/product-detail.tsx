@@ -145,6 +145,7 @@ export function ProductDetail({ product }: ProductDetailProps) {
                 slug: product.slug,
                 name: product.name,
                 price: parseFloat(currentPrice),
+                originalPrice: hasDiscount ? parseFloat(regularPrice) : undefined,
                 image: allImages[0] || '/images/placeholder-product.svg',
                 variants: variationAttributes,
                 stock: currentStock,
