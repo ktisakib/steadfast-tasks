@@ -217,7 +217,7 @@ export function ProductDetail({ product }: ProductDetailProps) {
                                             width={68}
                                             height={68}
                                             className="object-cover"
-                                           
+
                                         />
                                     </button>
                                 ))}
@@ -391,7 +391,7 @@ export function ProductDetail({ product }: ProductDetailProps) {
                                     Quantity
                                 </span>
                                 <div className="relative h-10">
-                                    <div className="w-full h-full border border-[#E2E8F0] rounded-full flex items-center justify-between px-3">
+                                    <div className="w-full h-full border border-gray-200 rounded-full flex items-center justify-between px-1">
                                         <button
                                             onClick={() => handleQuantityChange(quantity - 1)}
                                             disabled={quantity <= 1 || currentStock === 0}
@@ -407,7 +407,7 @@ export function ProductDetail({ product }: ProductDetailProps) {
                                             disabled={quantity >= currentStock || currentStock === 0}
                                             className="w-7 h-7 sm:w-[33px] sm:h-[33px] bg-slate-100 rounded-full flex items-center justify-center disabled:opacity-50"
                                         >
-                                            <span className="text-lg sm:text-[24px] font-medium text-slate-500 font-['Onest']">+</span>
+                                            <span className="text-lg sm:text-[24px] font-medium text-slate-500">+</span>
                                         </button>
                                     </div>
                                 </div>

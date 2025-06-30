@@ -1,8 +1,9 @@
 import { Metadata } from 'next';
 import { Suspense } from 'react';
 import { ProductGrid } from '@/components/products/product-grid';
-import { CategoryFiltersServer } from '@/components/products/category-filters-server';
 import { ProductCardSkeleton } from '@/components/ui/loader';
+import { CategoryFilters } from '@/components/products/category-filters';
+import { getCategories } from '@/lib/api';
 
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>
 
@@ -43,22 +44,22 @@ interface ProductsPageProps {
 
 export default async function ProductsPage(props: ProductsPageProps) {
     const searchParams = await props.searchParams;
-
+ const categories = await getCategories();
     return (
         <div className="min-h-screen bg-white">
-            <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <div className="max-w-[1280px] mx-auto px-4 sm:px-6  py-6">
                 <div className="flex flex-col lg:flex-row gap-8">
                     {/* Filters Sidebar */}
                     <aside className="lg:w-64 lg:flex-shrink-0">
                         <div className="sticky top-6">
                             <Suspense fallback={<div className="h-64 bg-gray-50 rounded-lg animate-pulse" />}>
-                                <CategoryFiltersServer />
+                                <CategoryFilters categories={categories} />
                             </Suspense>
                         </div>
                     </aside>
 
                     {/* Products Grid */}
-                    <main className="flex-1 min-w-0">
+                    <main className="flex-1 ">
                         <Suspense
                             fallback={
                                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">

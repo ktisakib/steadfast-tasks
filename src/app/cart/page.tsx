@@ -50,6 +50,31 @@ export default function CartPage() {
         }));
     };
 
+    const handleSelectShop = (shopItems: CartItem[]) => {
+        const shopItemKeys = shopItems.map(item =>
+            `${item.productId}-${JSON.stringify(item.variants)}`
+        );
+
+        // Check if all items in this shop are currently selected
+        const allShopItemsSelected = shopItemKeys.every(key => selectedItems[key]);
+
+        // Toggle all items in this shop
+        setSelectedItems(prev => {
+            const newSelectedItems = { ...prev };
+            shopItemKeys.forEach(key => {
+                newSelectedItems[key] = !allShopItemsSelected;
+            });
+            return newSelectedItems;
+        });
+    };
+
+    const isShopSelected = (shopItems: CartItem[]) => {
+        const shopItemKeys = shopItems.map(item =>
+            `${item.productId}-${JSON.stringify(item.variants)}`
+        );
+        return shopItemKeys.every(key => selectedItems[key]);
+    };
+
     const handleSelectAll = () => {
         const newSelectAll = !selectAll;
         setSelectAll(newSelectAll);
@@ -204,6 +229,8 @@ export default function CartPage() {
                                     storeItems={storeItems}
                                     selectedItems={selectedItems}
                                     onSelectItem={handleSelectItem}
+                                    onSelectShop={() => handleSelectShop(storeItems)}
+                                    isShopSelected={isShopSelected(storeItems)}
                                     onQuantityUpdate={handleQuantityUpdate}
                                     onRemoveItem={handleRemoveItem}
                                 />
