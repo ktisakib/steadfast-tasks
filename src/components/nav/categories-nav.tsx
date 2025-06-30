@@ -8,7 +8,7 @@ export async function CategoriesNav() {
     return (
         <div className="lg:flex hidden items-center gap-6 relative">
             <CategoriesDropdown categories={categories} />
-            <CategoriesList categories={categories} />
+            <CategoriesList/>
         </div>
     );
 }
